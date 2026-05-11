@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Ico } from '../components/Icons'
 import BottomTabBar from '../components/BottomTabBar'
 import { LOCATIONS, FRIEND_FEED } from '../data/mock'
@@ -45,8 +46,40 @@ function MemoryPin({ location, onTap }) {
   )
 }
 
+function FriendMemoryPin({ post, feedIndex, onTap, animDelay }) {
+  const { top, left } = post.mapPos
+
+  return (
+    <button
+      onClick={onTap}
+      className="absolute -translate-x-1/2 -translate-y-full tappable friend-pin-enter"
+      style={{ top, left, animationDelay: `${animDelay}ms` }}
+    >
+      <div className="relative">
+        <div className="w-9 h-9 p-[3px] rounded-[7px] rotate-[3deg]"
+             style={{ background: 'var(--paper)',
+                      boxShadow: '0 4px 10px -2px rgba(61,46,31,0.3)',
+                      border: '1.5px solid rgba(61,46,31,0.15)' }}>
+          <img src={post.photo} alt="" className="w-full h-full object-cover rounded-[4px]"
+               style={{ filter: 'sepia(0.4) saturate(0.7) contrast(0.9)' }}/>
+        </div>
+        {/* Friend avatar overlay */}
+        <img src={post.avatar} alt="" className="absolute -bottom-1 -left-1.5 w-4 h-4 rounded-full border"
+             style={{ borderColor: 'var(--paper)', filter: 'sepia(0.15)' }}/>
+        {/* Pin triangle — sepia color */}
+        <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-0 h-0"
+             style={{ borderLeft: '4px solid transparent', borderRight: '4px solid transparent',
+                      borderTop: '7px solid var(--sepia-mute)' }}/>
+        <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full"
+             style={{ background: 'var(--sepia-mute)' }}/>
+      </div>
+    </button>
+  )
+}
+
 export default function MapHome({ go, goRoot }) {
-  const nearbyFriendCount = FRIEND_FEED.filter(f => f.distance <= 1000).length
+  const [showFriendPins, setShowFriendPins] = useState(false)
+  const nearbyCount = FRIEND_FEED.length
 
   return (
     <div className="page-enter relative h-full flex flex-col" style={{ background: 'var(--cream)' }}>
@@ -94,9 +127,21 @@ export default function MapHome({ go, goRoot }) {
         <div className="absolute hand text-[12px]" style={{ top: 380, left: 50, color: 'var(--sepia-mute)' }}>망원</div>
         <div className="absolute hand text-[11px]" style={{ top: 220, left: '52%', color: '#6b8a90' }}>한강</div>
 
+        {/* My memory pins */}
         {LOCATIONS.map(loc => (
           <MemoryPin key={loc.id} location={loc}
                      onTap={() => go('locationDetail', { locationId: loc.id })}/>
+        ))}
+
+        {/* Friend memory pins (overlay when toggled) */}
+        {showFriendPins && FRIEND_FEED.map((post, i) => (
+          <FriendMemoryPin
+            key={post.id}
+            post={post}
+            feedIndex={i}
+            animDelay={i * 100}
+            onTap={() => goRoot('feed', { startIdx: i })}
+          />
         ))}
 
         {/* Current location dot */}
@@ -106,23 +151,50 @@ export default function MapHome({ go, goRoot }) {
                         boxShadow: '0 0 0 4px rgba(59,111,179,0.25), 0 0 0 1.5px white' }}/>
         </div>
 
-        {/* Bottom bar: legend + nearby friends banner */}
+        {/* Bottom legend + toggle banner */}
         <div className="absolute bottom-3 left-3 right-3 flex justify-between items-center">
+          {/* Legend */}
           <div className="flex items-center gap-3 px-3 py-1.5 rounded-full text-[10.5px]"
                style={{ background: 'rgba(255,253,247,0.85)', color: 'var(--sepia-soft)' }}>
             <span className="flex items-center gap-1">
-              <span className="w-2.5 h-2.5 rounded-full" style={{ background: 'var(--terra)' }}/>내 추억
+              <span className="w-2 h-2 rounded-full" style={{ background: 'var(--terra)' }}/>내 추억
             </span>
+            {showFriendPins && (
+              <span className="flex items-center gap-1">
+                <span className="w-2 h-2 rounded-full" style={{ background: 'var(--sepia-mute)' }}/>친구 순간
+              </span>
+            )}
           </div>
-          {nearbyFriendCount > 0 && (
-            <button onClick={() => goRoot('feed')}
-                    className="tappable flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10.5px] font-medium"
-                    style={{ background: 'rgba(212,130,74,0.92)', color: 'var(--paper)',
-                             boxShadow: '0 4px 12px -4px rgba(212,130,74,0.6)' }}>
-              <Ico.steps width="13" height="13"/>
-              근처 친구 순간 {nearbyFriendCount}개
-            </button>
-          )}
+
+          {/* Friend pin toggle banner */}
+          <button
+            onClick={() => setShowFriendPins(v => !v)}
+            className="tappable flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10.5px] font-medium relative"
+            style={{
+              background: showFriendPins ? 'rgba(61,46,31,0.75)' : 'rgba(212,130,74,0.92)',
+              color: 'var(--paper)',
+              boxShadow: showFriendPins
+                ? '0 4px 12px -4px rgba(61,46,31,0.4)'
+                : '0 4px 12px -4px rgba(212,130,74,0.6)',
+            }}>
+            {!showFriendPins && (
+              <>
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
+                        style={{ background: 'rgba(255,253,247,0.7)' }}/>
+                  <span className="relative inline-flex rounded-full h-2 w-2"
+                        style={{ background: 'var(--paper)' }}/>
+                </span>
+                근처 친구 순간 {nearbyCount}개
+              </>
+            )}
+            {showFriendPins && (
+              <>
+                <Ico.steps width="12" height="12"/>
+                친구 순간 보는 중 ✕
+              </>
+            )}
+          </button>
         </div>
       </div>
 
