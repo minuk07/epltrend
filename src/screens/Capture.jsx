@@ -85,26 +85,32 @@ export default function Capture({ go, goBack, goRoot }) {
         </Field>
 
         <Field>
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-[12px]" style={{ color: 'var(--sepia-soft)' }}>함께한 사람</span>
-            {tags.map(t => (
-              <span key={t} className="text-[12px] px-2.5 py-1 rounded-full" style={{ background: 'var(--cream-deep)', color: 'var(--sepia)' }}>
-                @{t}
-              </span>
-            ))}
-            <button className="text-[12px] w-7 h-7 rounded-full flex items-center justify-center" style={{ border: '1px dashed var(--sepia-mute)', color: 'var(--sepia-mute)' }}>+</button>
+          <div className="flex items-start gap-2 flex-wrap">
+            <span className="text-[12px] pt-1" style={{ color: 'var(--sepia-soft)' }}>함께한 사람</span>
+            <div className="flex-1 flex flex-wrap gap-1.5">
+              {tags.map(t => (
+                <span key={t} className="text-[12px] px-2.5 py-1 rounded-full" style={{ background: 'var(--cream-deep)', color: 'var(--sepia)' }}>
+                  @{t}
+                </span>
+              ))}
+              <button className="text-[12px] w-7 h-7 rounded-full flex items-center justify-center" style={{ border: '1px dashed var(--sepia-mute)', color: 'var(--sepia-mute)' }}>+</button>
+            </div>
           </div>
+          {tags.length > 0 && (
+            <p className="text-[10.5px] mt-2 leading-relaxed" style={{ color: 'var(--sepia-mute)' }}>
+              @{tags[0]}를 태그하면 {tags[0]}에게 '함께한 추억' 수락 요청이 가요. 수락하면 {tags[0]}의 지도에도 이 추억이 추가돼요.
+            </p>
+          )}
         </Field>
 
         <div className="mt-4">
           <p className="text-[12px] mb-2 px-1" style={{ color: 'var(--sepia-soft)' }}>공개 범위</p>
-          <div className="flex gap-1.5 p-1 rounded-full" style={{ background: 'var(--paper)' }}>
+          <div className="flex gap-1.5 p-1 rounded-full mb-2" style={{ background: 'var(--paper)' }}>
             {[
-              ['only', '나만'],
+              ['only', '나만 보기'],
               ['friends', '친구 공개'],
-              ['together', '같이 있던 사람만'],
             ].map(([k, l]) => (
-              <button key={k} onClick={() => {}}
+              <button key={k} onClick={() => setVisibility(k)}
                 className="tappable flex-1 text-[12px] py-2 rounded-full font-medium transition-colors"
                 style={{
                   background: visibility === k ? 'var(--terra)' : 'transparent',
@@ -114,6 +120,11 @@ export default function Capture({ go, goBack, goRoot }) {
               </button>
             ))}
           </div>
+          <p className="text-[11px] px-1 leading-relaxed" style={{ color: 'var(--sepia-mute)' }}>
+            {visibility === 'only'
+              ? '나만 볼 수 있어요. 내 지도에만 표시됩니다.'
+              : '친구들이 이 장소 근처에 있을 때 발자국 탭에 노출돼요.'}
+          </p>
         </div>
       </div>
 

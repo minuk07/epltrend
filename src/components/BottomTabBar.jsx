@@ -23,8 +23,8 @@ export default function BottomTabBar({ active, go, goRoot }) {
         <TabBtn active={active === 'home'} label="지도" onClick={() => goRoot('home')}>
           <Ico.map width="21" height="21"/>
         </TabBtn>
-        <TabBtn active={active === 'feed'} label="피드" onClick={() => goRoot('feed')}>
-          <Ico.feed width="20" height="20"/>
+        <TabBtn active={active === 'feed'} label="발자국" onClick={() => goRoot('feed')}>
+          <Ico.steps width="20" height="20"/>
         </TabBtn>
         <button
           onClick={() => go('capture')}
