@@ -19,5 +19,7 @@ export const Ico = {
   dot:     (p) => <svg viewBox="0 0 24 24" fill="currentColor" {...p}><circle cx="12" cy="12" r="4"/></svg>,
   steps:   (p) => <svg viewBox="0 0 24 24" fill="currentColor" {...p}><ellipse cx="8" cy="5.5" rx="2.4" ry="3.2" transform="rotate(-18 8 5.5)" opacity="0.55"/><ellipse cx="16" cy="10.5" rx="2.4" ry="3.2" transform="rotate(18 16 10.5)"/><ellipse cx="8" cy="15.5" rx="2.4" ry="3.2" transform="rotate(-18 8 15.5)" opacity="0.8"/><ellipse cx="16" cy="20" rx="2.4" ry="3.2" transform="rotate(18 16 20)" opacity="0.5"/></svg>,
   send:    (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" {...p}><path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z" strokeLinecap="round" strokeLinejoin="round"/></svg>,
-  chat:    (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" {...p}><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+  chat:       (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" {...p}><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+  chevronUp:  (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" {...p}><path d="M6 15l6-6 6 6" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+  chevronDown:(p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" {...p}><path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round"/></svg>,
 }
