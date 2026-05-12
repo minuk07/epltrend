@@ -167,34 +167,51 @@ export default function MapHome({ go, goRoot }) {
           </div>
 
           {/* Friend pin toggle banner */}
-          <button
-            onClick={() => setShowFriendPins(v => !v)}
-            className="tappable flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10.5px] font-medium relative"
-            style={{
-              background: showFriendPins ? 'rgba(61,46,31,0.75)' : 'rgba(212,130,74,0.92)',
-              color: 'var(--paper)',
-              boxShadow: showFriendPins
-                ? '0 4px 12px -4px rgba(61,46,31,0.4)'
-                : '0 4px 12px -4px rgba(212,130,74,0.6)',
-            }}>
-            {!showFriendPins && (
-              <>
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
-                        style={{ background: 'rgba(255,253,247,0.7)' }}/>
-                  <span className="relative inline-flex rounded-full h-2 w-2"
-                        style={{ background: 'var(--paper)' }}/>
-                </span>
-                근처 친구 순간 {nearbyCount}개
-              </>
-            )}
-            {showFriendPins && (
-              <>
-                <Ico.steps width="12" height="12"/>
-                친구 순간 보는 중 ✕
-              </>
-            )}
-          </button>
+          {!showFriendPins ? (
+            <button
+              onClick={() => setShowFriendPins(true)}
+              className="tappable banner-breathe flex items-center gap-2 rounded-full font-semibold relative"
+              style={{
+                background: '#C4722A',
+                color: 'var(--paper)',
+                fontSize: 11,
+                paddingLeft: 10, paddingRight: 14,
+                paddingTop: 7, paddingBottom: 7,
+              }}>
+              {/* Overlapping friend avatars */}
+              <div className="flex items-center flex-shrink-0" style={{ marginRight: 2 }}>
+                <img src={FRIEND_FEED[0].avatar} alt=""
+                     style={{ width: 28, height: 28, borderRadius: '50%',
+                               border: '2px solid rgba(255,253,247,0.9)',
+                               filter: 'sepia(0.15)', flexShrink: 0 }}/>
+                <img src={FRIEND_FEED[1].avatar} alt=""
+                     style={{ width: 28, height: 28, borderRadius: '50%',
+                               border: '2px solid rgba(255,253,247,0.9)',
+                               filter: 'sepia(0.15)', flexShrink: 0,
+                               marginLeft: -8 }}/>
+              </div>
+              {/* Ping dot */}
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
+                      style={{ background: 'rgba(255,253,247,0.7)' }}/>
+                <span className="relative inline-flex rounded-full h-2 w-2"
+                      style={{ background: 'var(--paper)' }}/>
+              </span>
+              근처 친구 순간 {nearbyCount}개
+            </button>
+          ) : (
+            <button
+              onClick={() => setShowFriendPins(false)}
+              className="tappable flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10.5px] font-medium"
+              style={{
+                background: 'rgba(61,46,31,0.75)',
+                color: 'var(--paper)',
+                boxShadow: '0 4px 12px -4px rgba(61,46,31,0.4)',
+              }}>
+              <Ico.steps width="12" height="12"/>
+              친구 순간 보는 중 ✕
+            </button>
+          )}
         </div>
       </div>
 

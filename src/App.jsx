@@ -10,6 +10,7 @@ import NearbyMemories from './screens/NearbyMemories'
 import Capture from './screens/Capture'
 import Discover from './screens/Discover'
 import Accept from './screens/Accept'
+import Guide from './screens/Guide'
 
 const SCREENS = {
   onboarding:     Onboarding,
@@ -22,6 +23,7 @@ const SCREENS = {
   capture:        Capture,
   discover:       Discover,
   accept:         Accept,
+  guide:          Guide,
 }
 
 export default function App() {

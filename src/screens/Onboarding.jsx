@@ -53,7 +53,7 @@ export default function Onboarding({ go, goRoot }) {
         </p>
         <div className="mt-auto pt-6">
           <button
-            onClick={() => goRoot('home')}
+            onClick={() => goRoot('guide')}
             className="tappable w-full py-4 rounded-full text-[16px] font-semibold tracking-wide"
             style={{ background: 'var(--terra)', color: '#FFFDF7', boxShadow: '0 8px 20px -8px rgba(212,130,74,0.6)' }}
           >
