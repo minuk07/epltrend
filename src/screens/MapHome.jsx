@@ -85,7 +85,7 @@ export default function MapHome({ go, goRoot }) {
     <div className="page-enter relative h-full flex flex-col" style={{ background: 'var(--cream)' }}>
       {/* Top bar */}
       <div className="flex items-center justify-between px-5 pt-2 pb-3 z-20 relative flex-shrink-0">
-        <p className="serif-en text-[22px]" style={{ color: 'var(--terra)' }}>moment</p>
+        <p className="serif-kr text-[22px] font-bold" style={{ color: 'var(--terra)' }}>여기서</p>
         <button onClick={() => go('nearby')}
                 className="tappable flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[12px] font-medium"
                 style={{ background: 'rgba(255,253,247,0.85)', color: 'var(--sepia)',

@@ -42,7 +42,7 @@ export default function Onboarding({ go, goRoot }) {
       </div>
 
       <div className="flex-1 flex flex-col px-8 pt-3 pb-8">
-        <p className="serif-en text-[15px] tracking-wider" style={{ color: 'var(--terra)' }}>moment</p>
+        <p className="serif-kr text-[15px] tracking-wider font-bold" style={{ color: 'var(--terra)' }}>여기서</p>
         <h1 className="serif-kr font-extrabold leading-[1.15] mt-3" style={{ fontSize: 34, color: 'var(--sepia)', letterSpacing: '-0.01em' }}>
           우연히 마주치는<br/>추억
         </h1>
