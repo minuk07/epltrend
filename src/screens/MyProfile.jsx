@@ -29,7 +29,7 @@ export default function MyProfile({ go, goRoot }) {
           <div className="flex-1">
             <p className="serif-kr text-[17px] font-bold" style={{ color: 'var(--sepia)' }}>나예</p>
             <p className="text-[12px] mt-0.5" style={{ color: 'var(--sepia-mute)' }}>
-              moment 사용 중
+              여기서 사용 중
             </p>
           </div>
         </div>
