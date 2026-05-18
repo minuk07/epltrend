@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes liveTicker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.live-ticker {
+  display: inline-block;
+  animation: liveTicker 28s linear infinite;
+  white-space: nowrap;
+}
+
 :root {
   --cream: #FAF6F0;
   --cream-deep: #F2EADC;
