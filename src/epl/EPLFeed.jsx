@@ -178,7 +178,13 @@ function FeedCard({ post, selectedTeam, onOpen }) {
     : 'radial-gradient(ellipse at 50% 0%, #1a1a3a14 0%, transparent 50%)';
 
   return (
-    <div className="h-full relative overflow-hidden" style={{ background: '#080810' }}>
+    <div className="h-full relative overflow-hidden"
+      style={post.imageUrl
+        ? { backgroundImage: `url(${post.imageUrl})`, backgroundSize: 'cover', backgroundPosition: 'center top' }
+        : { background: '#080810' }}>
+      {post.imageUrl && (
+        <div className="absolute inset-0 pointer-events-none" style={{ background: 'rgba(0,0,0,0.62)' }} />
+      )}
       <div className="absolute inset-0 pointer-events-none" style={{ background: bgGradient }} />
 
       {isDebate && (
