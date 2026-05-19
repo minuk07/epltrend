@@ -340,7 +340,7 @@ function CommentsSection({ post, vote, tab, onTabChange }) {
     );
     if (t === 'args') return (
       <span className="flex items-center gap-1.5">
-        논점별
+        주요의견
         <span className="text-xs font-bold px-1 py-0.5 rounded" style={{ color: '#818cf8', background: '#1e1b4b', fontSize: '9px' }}>AI</span>
       </span>
     );
