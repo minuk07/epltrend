@@ -237,8 +237,15 @@ function FeedCard({ post, selectedTeam, onOpen }) {
           {post.summary}
         </p>
 
+        {post.tweet && (
+          <div className="flex items-center gap-1.5 mt-2">
+            <span className="text-xs font-semibold" style={{ color: '#4a4a6a' }}>{post.tweet.author}</span>
+            <span className="text-xs font-bold px-1.5 py-0.5 rounded" style={{ background: '#2a1f00', color: '#f4a100' }}>T{post.tweet.tier}</span>
+            <span className="text-xs" style={{ color: '#3a3a5a' }}>· {post.tweet.timeAgo}</span>
+          </div>
+        )}
+
         {isDebate && <VoteBarMini post={post} />}
-        {post.tweet && <TweetEmbed tweet={post.tweet} />}
 
         <div className="flex items-center justify-between mt-3">
           <div className="flex gap-2">

@@ -70,6 +70,31 @@ function CommentInput({ disabled }) {
   );
 }
 
+/* ─── Korean briefing card ─── */
+
+function BriefingCard({ post }) {
+  if (!post.briefing) return null;
+  return (
+    <div className="rounded-2xl px-4 py-3" style={{ background: '#0e0e1a', border: '1px solid #1e1e2a' }}>
+      {post.tweet && (
+        <div className="flex items-center gap-2 mb-2.5">
+          <div className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
+            style={{ background: '#1e1e2e', color: '#f4a100' }}>
+            {post.tweet.initials}
+          </div>
+          <span className="text-xs font-semibold" style={{ color: '#8b8fa8' }}>{post.tweet.author}</span>
+          <span className="text-xs font-bold px-1.5 py-0.5 rounded"
+            style={{ background: '#2a1f00', color: '#f4a100' }}>T{post.tweet.tier}</span>
+          <span className="text-xs ml-auto shrink-0" style={{ color: '#3a3a5a' }}>{post.tweet.timeAgo}</span>
+        </div>
+      )}
+      <p className="text-sm leading-relaxed" style={{ color: '#c8ccdf' }}>
+        {post.briefing}
+      </p>
+    </div>
+  );
+}
+
 /* ─── Debate summary (Stage 1: expanded) ─── */
 
 function DebateSummary({ post, vote, onVote, onCollapse }) {
@@ -85,24 +110,8 @@ function DebateSummary({ post, vote, onVote, onCollapse }) {
     <div className="flex-1 overflow-y-scroll" style={{ scrollbarWidth: 'none' }}>
       <div className="px-4 pt-4 pb-6 space-y-4">
 
-        {/* Tweet source card */}
-        {post.tweet && (
-          <div className="rounded-2xl px-4 py-3" style={{ background: '#0e0e1a', border: '1px solid #1e1e2a' }}>
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
-                style={{ background: '#1e1e2e', color: '#f4a100' }}>
-                {post.tweet.initials}
-              </div>
-              <span className="text-sm font-semibold text-white">{post.tweet.author}</span>
-              <span className="text-xs font-bold px-1.5 py-0.5 rounded"
-                style={{ background: '#2a1f00', color: '#f4a100' }}>T{post.tweet.tier}</span>
-              <span className="text-xs ml-auto shrink-0" style={{ color: '#3a3a5a' }}>{post.tweet.timeAgo}</span>
-            </div>
-            <p className="text-xs leading-relaxed" style={{ color: '#6b6f88', fontFamily: 'ui-monospace, monospace' }}>
-              {post.tweet.text}
-            </p>
-          </div>
-        )}
+        {/* Korean briefing card */}
+        <BriefingCard post={post} />
 
         {/* AI-generated debate label */}
         <div className="flex items-center gap-1.5">
@@ -429,16 +438,18 @@ export default function ReactionPanel({ post, vote, onVote, onClose }) {
             style={{ background: '#1a1a2a', color: '#9ca3af' }}>✕</button>
         </div>
 
-        {/* Non-debate: title */}
+        {/* Non-debate: title + briefing */}
         {!isDebate && (
-          <div className="px-4 pt-2 pb-3 shrink-0" style={{ borderBottom: '1px solid #141420' }}>
-            <h3 className="text-lg font-black text-white leading-snug">
-              {post.title.replace('\n', ' ')}
-            </h3>
-            {post.tweet && (
-              <p className="text-xs mt-0.5" style={{ color: '#6b6f88' }}>
-                {post.tweet.author} · {post.tweet.timeAgo}
-              </p>
+          <div className="shrink-0" style={{ borderBottom: '1px solid #141420' }}>
+            <div className="px-4 pt-2 pb-3">
+              <h3 className="text-lg font-black text-white leading-snug">
+                {post.title.replace('\n', ' ')}
+              </h3>
+            </div>
+            {post.briefing && (
+              <div className="px-4 pb-3">
+                <BriefingCard post={post} />
+              </div>
             )}
           </div>
         )}
