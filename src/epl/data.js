@@ -1,3 +1,12 @@
+export const TEAMS = [
+  { id: 'man-utd',   name: 'Manchester United',  shortName: 'MUN', primaryColor: '#DA291C' },
+  { id: 'tottenham', name: 'Tottenham Hotspur',   shortName: 'TOT', primaryColor: '#132257' },
+  { id: 'arsenal',   name: 'Arsenal',             shortName: 'ARS', primaryColor: '#EF0107' },
+  { id: 'liverpool', name: 'Liverpool',           shortName: 'LIV', primaryColor: '#C8102E' },
+  { id: 'chelsea',   name: 'Chelsea',             shortName: 'CHE', primaryColor: '#034694' },
+  { id: 'man-city',  name: 'Manchester City',     shortName: 'MCI', primaryColor: '#6CABDD' },
+];
+
 export const POSTS = [
   // ── p1: 카세미루 이별 오피셜 (debate) ──────────────────────────
   {

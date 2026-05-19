@@ -7,6 +7,10 @@ export default function App() {
   const [onboarded, setOnboarded] = useState(
     () => localStorage.getItem('reax_onboarded') === '1'
   )
+  const [selectedTeam, setSelectedTeam] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('reax_team')); }
+    catch { return null; }
+  })
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center py-6 px-4"
@@ -26,8 +30,11 @@ export default function App() {
           {/* Screen area */}
           <div className="absolute inset-x-0 top-[34px] bottom-[18px] flex flex-col">
             {onboarded
-              ? <EPLFeed />
-              : <Onboarding onComplete={() => setOnboarded(true)} />
+              ? <EPLFeed selectedTeam={selectedTeam} />
+              : <Onboarding onComplete={(team) => {
+                  setSelectedTeam(team);
+                  setOnboarded(true);
+                }} />
             }
           </div>
           <div className="absolute inset-x-0 bottom-0">

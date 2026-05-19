@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { TEAMS } from './data';
 
 /* ── Page 1: Card stack ── */
 function CardStackVisual() {
@@ -114,14 +115,12 @@ function DebateCardVisual() {
           </div>
           <span style={{ color: '#4a4a6a', fontSize: '11px' }}>2.1K 참여중</span>
         </div>
-
         <h2 className="font-black text-white leading-tight mb-1.5" style={{ fontSize: '20px' }}>
           브루노는 이번 여름<br />매각해야 할까?
         </h2>
         <p style={{ color: 'rgba(255,255,255,0.38)', fontSize: '12px', lineHeight: '1.6', marginBottom: '14px' }}>
           20어시를 기록한 에이스를 팔아야 한다는 매각설 — 팬 여론이 뜨겁게 갈린다.
         </p>
-
         <div className="flex h-2 rounded-full overflow-hidden mb-2" style={{ background: '#1a1a2a' }}>
           <div style={{ width: '41%', background: 'linear-gradient(90deg,#2563eb,#3b82f6)' }} />
           <div style={{ width: '59%', background: 'linear-gradient(90deg,#dc2626,#e63946)' }} />
@@ -130,7 +129,6 @@ function DebateCardVisual() {
           <span className="font-semibold" style={{ color: '#3b82f6', fontSize: '11px' }}>찬성 41%</span>
           <span className="font-semibold" style={{ color: '#e63946', fontSize: '11px' }}>59% 반대</span>
         </div>
-
         <button className="w-full py-2.5 rounded-xl font-bold text-sm"
           style={{ background: '#fff', color: '#000' }}>
           팬 반응 2.1K →
@@ -156,7 +154,7 @@ function FlowStepsVisual() {
     { icon: '📊', label: '현재 팬 여론 확인', sub: '찬성 41% vs 반대 59%', color: '#3b82f6' },
     { icon: '👍', label: '내 입장 선택 · 투표', sub: '투표 후 댓글 참여 가능', color: '#60a5fa' },
     { icon: '✦', label: 'AI 핵심 의견', sub: '찬반 논점 자동 요약', color: '#818cf8' },
-    { icon: '🔥', label: '팬 반응 탐색', sub: '베스트 · 실시간 · 논점별', color: '#fb923c' },
+    { icon: '🔥', label: '팬 반응 탐색', sub: '베스트 · 실시간 · 주요의견', color: '#fb923c' },
   ];
 
   return (
@@ -175,9 +173,7 @@ function FlowStepsVisual() {
             <div className="font-bold" style={{ color: step.color, fontSize: '12px' }}>{step.label}</div>
             <div style={{ color: '#4a4a6a', fontSize: '10px', marginTop: '1px' }}>{step.sub}</div>
           </div>
-          {i < visible && (
-            <span style={{ color: '#2a2a4a', fontSize: '10px' }}>→</span>
-          )}
+          {i < visible && <span style={{ color: '#2a2a4a', fontSize: '10px' }}>→</span>}
         </div>
       ))}
     </div>
@@ -188,14 +184,11 @@ function FlowStepsVisual() {
 function FinalVisual() {
   return (
     <div className="flex flex-col items-center px-6 pt-6 pb-2">
-      {/* Logo */}
       <div className="flex items-center gap-2 mb-10">
         <span className="font-black text-white" style={{ fontSize: '28px', letterSpacing: '-0.5px' }}>Reax</span>
         <span className="text-xs font-semibold px-2 py-0.5 rounded"
           style={{ background: '#1a1a2a', color: '#8b8fa8', border: '1px solid #2a2a3a' }}>EPL</span>
       </div>
-
-      {/* Hero text */}
       <div className="text-center">
         <p className="font-black text-white" style={{ fontSize: '38px', letterSpacing: '-0.8px', lineHeight: '1.1' }}>
           피드는 가볍게,
@@ -204,8 +197,6 @@ function FinalVisual() {
           반응은 깊게
         </p>
       </div>
-
-      {/* Decorative line */}
       <div className="mt-8 flex items-center gap-3">
         <div className="h-px w-12" style={{ background: 'linear-gradient(90deg, transparent, #1e1e2a)' }} />
         <div className="flex gap-1.5">
@@ -215,6 +206,44 @@ function FinalVisual() {
         </div>
         <div className="h-px w-12" style={{ background: 'linear-gradient(90deg, #1e1e2a, transparent)' }} />
       </div>
+    </div>
+  );
+}
+
+/* ── Page 6: Team selection ── */
+function TeamSelectVisual({ selectedTeam, onSelect }) {
+  return (
+    <div className="mx-5 grid grid-cols-2 gap-3">
+      {TEAMS.map((team) => {
+        const isSelected = selectedTeam?.id === team.id;
+        return (
+          <button
+            key={team.id}
+            onClick={() => onSelect(team)}
+            className="rounded-2xl px-4 py-4 text-left transition-transform active:scale-95"
+            style={{
+              background: isSelected ? `${team.primaryColor}20` : '#0d0d1a',
+              border: `1.5px solid ${isSelected ? team.primaryColor : '#1e1e2a'}`,
+              boxShadow: isSelected ? `0 0 18px ${team.primaryColor}35` : 'none',
+            }}>
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-8 h-8 rounded-full flex items-center justify-center font-black text-xs shrink-0"
+                style={{ background: team.primaryColor, color: '#fff' }}>
+                {team.shortName.slice(0, 2)}
+              </div>
+              {isSelected && (
+                <span className="ml-auto text-sm font-black" style={{ color: team.primaryColor }}>✓</span>
+              )}
+            </div>
+            <div className="font-bold text-white" style={{ fontSize: '12px', lineHeight: '1.3' }}>
+              {team.name}
+            </div>
+            <div className="font-mono text-xs mt-0.5" style={{ color: '#4a4a6a' }}>
+              {team.shortName}
+            </div>
+          </button>
+        );
+      })}
     </div>
   );
 }
@@ -245,7 +274,13 @@ const PAGES = [
     Visual: FinalVisual,
     title: null,
     desc: '뉴스를 읽고 끝나는 것이 아니라, 팬들의 반응과 여론 흐름까지 함께 소비하세요.',
+  },
+  {
+    Visual: null, // TeamSelectVisual is rendered separately with props
+    isTeamSelect: true,
     isFinal: true,
+    title: '좋아하는 팀을\n선택하세요',
+    desc: '선택한 팀의 HOT DEBATE와 팬 반응을 우선 보여드립니다.',
   },
 ];
 
@@ -253,10 +288,12 @@ const PAGES = [
 export default function Onboarding({ onComplete }) {
   const [page, setPage] = useState(0);
   const [animKey, setAnimKey] = useState(0);
+  const [selectedTeam, setSelectedTeam] = useState(TEAMS[0]); // 기본값: Manchester United
 
   const complete = () => {
     localStorage.setItem('reax_onboarded', '1');
-    onComplete();
+    localStorage.setItem('reax_team', JSON.stringify(selectedTeam));
+    onComplete(selectedTeam);
   };
 
   const goNext = () => {
@@ -284,31 +321,28 @@ export default function Onboarding({ onComplete }) {
         </div>
       )}
 
-      {/* Visual — flex-1, vertically centered */}
+      {/* Visual */}
       <div key={animKey}
         className="page-enter flex-1 flex flex-col justify-center overflow-hidden"
-        style={{ paddingTop: current.isFinal ? '0' : '8px', paddingBottom: '8px' }}>
-        <Visual />
+        style={{ paddingTop: '8px', paddingBottom: '8px' }}>
+        {current.isTeamSelect
+          ? <TeamSelectVisual selectedTeam={selectedTeam} onSelect={setSelectedTeam} />
+          : <Visual />
+        }
       </div>
 
-      {/* Bottom block: text + dots + button */}
+      {/* Bottom block */}
       <div key={`t-${animKey}`} className="page-enter shrink-0 px-6 pb-8">
-        {!current.isFinal && (
-          <>
-            <h1 className="font-black text-white leading-tight mb-2 whitespace-pre-line"
-              style={{ fontSize: '22px', letterSpacing: '-0.3px' }}>
-              {current.title}
-            </h1>
-            <p className="text-sm leading-relaxed mb-6" style={{ color: '#5a5a7a' }}>
-              {current.desc}
-            </p>
-          </>
+        {current.title && (
+          <h1 className="font-black text-white leading-tight mb-2 whitespace-pre-line"
+            style={{ fontSize: '22px', letterSpacing: '-0.3px' }}>
+            {current.title}
+          </h1>
         )}
-        {current.isFinal && (
-          <p className="text-sm leading-relaxed text-center mb-6" style={{ color: '#5a5a7a' }}>
-            {current.desc}
-          </p>
-        )}
+        <p className={`text-sm leading-relaxed mb-6 ${!current.title ? 'text-center' : ''}`}
+          style={{ color: '#5a5a7a' }}>
+          {current.desc}
+        </p>
 
         <div className="flex items-center justify-between">
           <div className="flex gap-1.5">
@@ -324,8 +358,11 @@ export default function Onboarding({ onComplete }) {
           </div>
           <button onClick={goNext}
             className="px-6 py-3 rounded-full font-bold text-sm transition-transform active:scale-95"
-            style={{ background: '#fff', color: '#000' }}>
-            {page === PAGES.length - 1 ? '시작하기' : '다음'}
+            style={current.isFinal
+              ? { background: selectedTeam?.primaryColor || '#fff', color: '#fff' }
+              : { background: '#fff', color: '#000' }
+            }>
+            {current.isFinal ? '시작하기' : '다음'}
           </button>
         </div>
       </div>
