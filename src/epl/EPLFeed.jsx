@@ -145,7 +145,23 @@ function DebateBadge({ post }) {
   );
 }
 
-function VoteBarMini({ post }) {
+function VoteBarMini({ post, voted }) {
+  if (!voted) {
+    return (
+      <div className="mt-3 mb-1">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-xs font-semibold" style={{ color: '#60a5fa' }}>👍 {post.voteForLabel}</span>
+          <span className="text-xs" style={{ color: '#4a4a6a' }}>{fmt(post.participants)} 참여</span>
+          <span className="text-xs font-semibold" style={{ color: '#f87171' }}>{post.voteAgainstLabel} 👎</span>
+        </div>
+        <div className="h-1.5 rounded-full overflow-hidden" style={{ background: '#1a1a2a' }}>
+          <div className="h-full w-full rounded-full"
+            style={{ background: 'linear-gradient(90deg,#2563eb33 0%,#2563eb33 48%,#dc262633 48%,#dc262633 100%)' }} />
+        </div>
+        <p className="text-xs text-center mt-1.5" style={{ color: '#3a3a5a' }}>팬 반응을 눌러 여론 확인</p>
+      </div>
+    );
+  }
   return (
     <div className="mt-3 mb-1">
       <div className="flex h-1.5 rounded-full overflow-hidden mb-1.5" style={{ background: '#1a1a2a' }}>
@@ -164,7 +180,7 @@ function VoteBarMini({ post }) {
   );
 }
 
-function FeedCard({ post, selectedTeam, onOpen }) {
+function FeedCard({ post, selectedTeam, onOpen, vote }) {
   const isDebate = post.type === 'debate' || post.type === 'today_debate';
   const isToday = post.type === 'today_debate';
   const isSentimental = post.type === 'sentimental';
@@ -245,7 +261,7 @@ function FeedCard({ post, selectedTeam, onOpen }) {
           </div>
         )}
 
-        {isDebate && <VoteBarMini post={post} />}
+        {isDebate && <VoteBarMini post={post} voted={!!vote} />}
 
         <div className="flex items-center justify-between mt-3">
           <div className="flex gap-2">
@@ -277,7 +293,7 @@ function FeedCard({ post, selectedTeam, onOpen }) {
 }
 
 /* ─── Feed tab ─── */
-function FeedView({ posts, selectedTeam, onOpen, onIndexChange }) {
+function FeedView({ posts, selectedTeam, onOpen, onIndexChange, votes }) {
   const scrollRef = useRef(null);
 
   useEffect(() => {
@@ -301,7 +317,7 @@ function FeedView({ posts, selectedTeam, onOpen, onIndexChange }) {
       style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
       {posts.map((post) => (
         <div key={post.id} className="snap-start" style={{ height: '100%' }}>
-          <FeedCard post={post} selectedTeam={selectedTeam} onOpen={() => onOpen(post)} />
+          <FeedCard post={post} selectedTeam={selectedTeam} onOpen={() => onOpen(post)} vote={votes?.[post.id]} />
         </div>
       ))}
     </div>
@@ -749,6 +765,7 @@ export default function EPLFeed({ selectedTeam }) {
             selectedTeam={selectedTeam}
             onOpen={setPanelPost}
             onIndexChange={setCurrentIndex}
+            votes={votes}
           />
         )}
         {activeTab === 'hot' && (
