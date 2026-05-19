@@ -1,7 +1,13 @@
+import { useState } from 'react'
 import StatusBar, { HomeIndicator } from './components/StatusBar'
 import EPLFeed from './epl/EPLFeed'
+import Onboarding from './epl/Onboarding'
 
 export default function App() {
+  const [onboarded, setOnboarded] = useState(
+    () => localStorage.getItem('reax_onboarded') === '1'
+  )
+
   return (
     <div className="min-h-screen w-full flex items-center justify-center py-6 px-4"
       style={{ background: '#070710' }}>
@@ -19,7 +25,10 @@ export default function App() {
             style={{ background: '#000' }} />
           {/* Screen area */}
           <div className="absolute inset-x-0 top-[34px] bottom-[18px] flex flex-col">
-            <EPLFeed />
+            {onboarded
+              ? <EPLFeed />
+              : <Onboarding onComplete={() => setOnboarded(true)} />
+            }
           </div>
           <div className="absolute inset-x-0 bottom-0">
             <HomeIndicator />
