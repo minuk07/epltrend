@@ -137,6 +137,39 @@ export const POSTS = [
     ],
   },
 
+  // ── p21: 이안 라이트 팬들과 자축 (sentimental / ARS) ────────────
+  {
+    id: 'p21',
+    type: 'sentimental',
+    title: '이안 라이트,\n"우리가 받을 자격이 있다"',
+    summary: '아스날 레전드 이안 라이트가 우승 확정 직후 팬들과 함께 자축에 나섰다. "지난 3년이 너무 힘들었는데 마침내 해냈다"며 기쁨을 감추지 못했다.',
+    briefing: '아스날 레전드 이안 라이트가 우승 확정 직후 팬들과 함께 거리로 나와 자축에 참여했다. 라이트는 "지난 3년이 정말 힘들었는데 마침내 해냈다. 솔직히 무슨 말을 해야 할지 모르겠다. 정말 대단하다"고 소감을 전했다. 이어 "이 클럽은 이걸 받을 자격이 있고, 전 세계 팬들도 마찬가지다. 우리 모두가 이걸 받을 자격이 있다"고 덧붙였다. 파브리지오 로마노가 라이트의 발언을 인용해 전했다.',
+    tweet: {
+      author: 'Fabrizio Romano',
+      initials: 'FR',
+      handle: '@FabrizioRomano',
+      tier: 1,
+      timeAgo: '3시간 전',
+    },
+    imageUrl: 'https://mblogthumb-phinf.pstatic.net/MjAyMTEwMDRfMjkz/MDAxNjMzMzM5NzU1MDYz.DJPaTBltzhriJkUN5ktTtR_F0U-bCNw4Ax3aHieeSLQg._Vga5sdJWAoQthjq7AJXRp1oorl7VioOEwOG_rbPltMg.JPEG.skdbwhdrb/IMG_2251.JPG?type=w800',
+    club: 'ARS',
+    status: 'Official',
+    hashtags: ['#이안라이트', '#아스날우승', '#자축'],
+    reactions: 11000,
+    comments: 2800,
+    bookmarks: 1100,
+    shares: 890,
+    gradientFrom: '#1a0505',
+    accentColor: '#ef0107',
+    icon: '❤️',
+    comments_data: [
+      { id: 1, rank: '01', initials: 'AG', user: '@arsenal_gooner', club: 'ARS', timeAgo: '30분', text: '라이트 형 눈물 나게 하지 마라... 나도 울었다', likes: 4123 },
+      { id: 2, rank: '02', initials: 'GK', user: '@gooner_kr', club: 'ARS', timeAgo: '45분', text: '이 클럽과 함께한 레전드가 팬들 사이로 뛰어든 거잖아. 진짜 장면이다', likes: 3456 },
+      { id: 3, rank: '03', initials: 'EK', user: '@epl_kr', timeAgo: '1시간', text: '"We deserve this" — 21년 기다린 팬들한테 라이트가 해줄 수 있는 최고의 말이다', likes: 2789 },
+      { id: 4, rank: '04', initials: 'MC', user: '@mcfc_forever', club: 'MCI', timeAgo: '1시간', text: '라이트가 팬들 사이에 들어간 거 보고 나도 뭔가 느꼈다. 인정한다', likes: 1567 },
+    ],
+  },
+
   // ── p16: 토트넘 강등권 마지막 라운드 (today_debate / TOT) ─────────
   {
     id: 'p16',
