@@ -8,6 +8,54 @@ export const TEAMS = [
 ];
 
 export const POSTS = [
+  // ── p23: 자비 알론소 첼시 감독 선임 (hot_debate / CHE) ─────────────
+  {
+    id: 'p23',
+    type: 'hot_debate',
+    badge: 'HOT DEBATE',
+    title: '첼시, 자비 알론소\n감독 선임 확정',
+    summary: '첼시가 자비 알론소를 신임 감독으로 선임했다. 디 애슬레틱은 "경기력 부진 속에서도 알론소 영입에 성공했다"고 전했다.',
+    briefing: '첼시가 자비 알론소를 신임 감독으로 선임한 것으로 전해졌다. 디 애슬레틱 첼시 담당 기자 리암 트워미는 "첼시가 경기력이 취약한 상황에서도 알론소 영입을 성사시켰다"고 평가했다. 알론소는 바이어 레버쿠젠을 이끌며 분데스리가 무패 우승을 달성한 감독으로, 유럽 최고 수준의 지도자로 꼽힌다. 다수의 빅클럽이 관심을 보인 알론소를 첼시가 최종 낙점한 것이다.',
+    tweet: {
+      author: 'The Athletic | Football',
+      initials: 'TA',
+      handle: '@TheAthleticFC',
+      tier: 1,
+      timeAgo: '35분 전',
+    },
+    imageUrl: 'https://e0.365dm.com/25/05/2048x1152/skysports-xabi-alonso-bayer_6910909.jpg?20250509154212',
+    club: 'CHE',
+    status: 'Official',
+    hashtags: ['#자비알론소', '#첼시', '#감독선임'],
+    reactions: 14200,
+    comments: 5800,
+    bookmarks: 2100,
+    shares: 1300,
+    voteFor: 67,
+    voteAgainst: 33,
+    voteForLabel: '신의 한 수',
+    voteAgainstLabel: '의문부호',
+    participants: 5800,
+    recentTrend: { pct: 6, direction: 'for', time: '30분' },
+    debateQuestion: '첼시의 자비 알론소 선임, 신의 한 수인가?',
+    aiNarrative: '레버쿠젠의 기적을 만든 알론소가 첼시를 선택했다. 팬들은 기대와 우려 사이에서 판단을 내리고 있다.',
+    aiSummary: {
+      for: ['분데스리가 무패 우승 — 유럽 최고의 검증된 감독', '젊은 선수단을 성장시키는 능력이 입증됐다', '첼시의 거대한 스쿼드를 정리할 적임자'],
+      against: ['EPL 경험이 전혀 없다는 점은 리스크다', '레버쿠젠과 첼시의 환경은 너무 다르다', '구단 구조적 문제를 감독이 해결하기엔 한계가 있다'],
+    },
+    argumentPoints: [
+      { id: 'xa1', text: '무패 우승 감독 — 전술 완성도만큼은 의심할 여지 없다', stance: 'for', comments: 678 },
+      { id: 'xa2', text: 'EPL은 레버쿠젠과 다르다. 적응 기간이 필요하다', stance: 'against', comments: 445 },
+      { id: 'xa3', text: '오너십 문제가 해결되지 않으면 누가 와도 똑같다', stance: 'neutral', comments: 312 },
+    ],
+    comments_data: [
+      { id: 1, rank: '01', initials: 'CK', user: '@chelsea_kr', club: 'CHE', timeAgo: '10분', text: '알론소가 오면 진짜 달라질 것 같다. 레버쿠젠에서 한 걸 생각하면', likes: 3241, stance: 'for' },
+      { id: 2, rank: '02', initials: 'EK', user: '@epl_kr', timeAgo: '20분', text: 'EPL 경험 없는 거 아무도 안 신경 쓰나. 리그 수준이 다르다', likes: 2134, stance: 'against' },
+      { id: 3, rank: '03', initials: 'PL', user: '@prem_legacy', timeAgo: '25분', text: '첼시 스쿼드에 문제가 너무 많다. 알론소가 뭘 할 수 있을지 궁금하긴 하다', likes: 1678 },
+      { id: 4, rank: '04', initials: 'AG', user: '@arsenal_gooner', club: 'ARS', timeAgo: '30분', text: '솔직히 첼시 팬 아니어도 알론소 EPL 오는 건 기대된다', likes: 1123 },
+    ],
+  },
+
   // ── p20: 맷 로 튀르키예 국기 — 일디즈 vs 귈러 (hot_debate / CHE) ──
   {
     id: 'p20',
