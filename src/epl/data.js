@@ -8,6 +8,102 @@ export const TEAMS = [
 ];
 
 export const POSTS = [
+  // ── p26: 라이스 "다 됐다" / 브루노 vs 라이스 논쟁 (hot_debate / ARS) ─
+  {
+    id: 'p26',
+    type: 'hot_debate',
+    badge: 'HOT DEBATE',
+    title: '라이스 "다 됐다"\n브루노 vs 라이스, EPL 최고는?',
+    summary: '데클란 라이스가 인스타그램에 "다 됐다"며 아스날 우승을 자축했다. 이번 시즌 활약을 두고 브루노 페르난데스와 EPL 최고 선수 논쟁이 뜨겁다.',
+    briefing: '파브리지오 로마노 보도다. 데클란 라이스가 아스날 우승 직후 인스타그램에 "I told you all… it\'s done"이라는 글을 남기며 자축했다. 이번 시즌 라이스는 아스날의 미드필드 엔진으로 우승을 이끌었으며, 맨유의 브루노 페르난데스와 함께 EPL 최고 미드필더 자리를 놓고 비교가 끊이지 않았다. 브루노는 강등권을 오가는 팀에서도 20어시스트를 기록하며 개인 기록을 세웠고, 라이스는 우승 팀의 핵심 역할을 해냈다.',
+    tweet: {
+      author: 'Fabrizio Romano',
+      initials: 'FR',
+      handle: '@FabrizioRomano',
+      tier: 1,
+      timeAgo: '9시간 전',
+    },
+    imageUrl: 'https://i2-prod.mirror.co.uk/article37159431.ece/ALTERNATES/s1200f/2_GettyImages-2257657329.jpg',
+    club: 'ARS',
+    status: 'Opinion',
+    hashtags: ['#데클란라이스', '#브루노페르난데스', '#EPL올해의선수'],
+    reactions: 18600,
+    comments: 7400,
+    bookmarks: 2900,
+    shares: 1700,
+    voteFor: 44,
+    voteAgainst: 56,
+    voteForLabel: '브루노 페르난데스',
+    voteAgainstLabel: '데클란 라이스',
+    participants: 7400,
+    recentTrend: { pct: 5, direction: 'against', time: '30분' },
+    debateQuestion: '이번 시즌 EPL 최고의 미드필더는?',
+    aiNarrative: '우승 팀 에이스 vs 강등권 팀의 고독한 영웅. 어떤 활약이 더 가치 있는지를 두고 팬들의 의견이 갈린다.',
+    aiSummary: {
+      for: ['20어시스트 — EPL 역대급 개인 기록을 세운 시즌', '팀 성적과 무관하게 꾸준한 퍼포먼스를 유지했다', '주장으로서 무너지는 팀을 홀로 버텼다'],
+      against: ['라이스는 우승을 만들어낸 핵심 부품이었다', '수비+공격 모두 소화하는 완성형 미드필더', '빅게임에서 결정적인 순간마다 존재감을 보였다'],
+    },
+    argumentPoints: [
+      { id: 'br1', text: '20어시스트 — 팀 성적 떠나서 이 숫자가 말해준다', stance: 'for', comments: 892 },
+      { id: 'br2', text: '라이스 없이 아스날 우승도 없었다', stance: 'against', comments: 1034 },
+      { id: 'br3', text: '평가 기준을 개인 기록으로 보냐, 팀 기여도로 보냐의 차이다', stance: 'neutral', comments: 567 },
+    ],
+    comments_data: [
+      { id: 1, rank: '01', initials: 'AG', user: '@arsenal_gooner', club: 'ARS', timeAgo: '30분', text: '라이스가 없었으면 이 우승도 없었다. 비교 자체가 의미 없다', likes: 5423, stance: 'against' },
+      { id: 2, rank: '02', initials: 'MF', user: '@manu_fan', club: 'MUN', timeAgo: '45분', text: '강등권 팀에서 20어시스트. 브루노가 없었으면 맨유는 이미 강등됐다', likes: 4231, stance: 'for' },
+      { id: 3, rank: '03', initials: 'EK', user: '@epl_kr', timeAgo: '1시간', text: '기준이 다르다. 개인 기록은 브루노, 팀 기여도는 라이스. 취향 차이다', likes: 3189 },
+      { id: 4, rank: '04', initials: 'GK', user: '@gooner_kr', club: 'ARS', timeAgo: '1시간', text: '"it\'s done" — 이 한 마디가 3년을 기다린 팬들한테 얼마나 의미 있는지', likes: 2876, stance: 'against' },
+    ],
+  },
+
+  // ── p25: 마테우스 페르난데스 맨유 협상 재개 (hot_debate / MUN) ──────
+  {
+    id: 'p25',
+    type: 'hot_debate',
+    badge: 'HOT DEBATE',
+    title: '맨유, 마테우스 페르난데스\n협상 재개',
+    summary: '맨유가 웨스트햄 소속 마테우스 페르난데스 영입을 위한 협상을 재개한 것으로 알려졌다. 아스날과 PSG도 관심을 보이고 있어 경쟁이 예상된다.',
+    briefing: '맨유가 이적 시장 개막을 앞두고 웨스트햄 소속 마테우스 페르난데스를 두고 협상을 재개한 것으로 전해졌다. 아스날과 PSG도 관심을 유지하고 있으며, 웨스트햄이 강등될 경우 약 1억 파운드 규모의 선수 매각이 불가피할 전망이어서 협상 조건이 유리해질 수 있다. 페르난데스는 포르투갈 국적 미드필더로 이번 시즌 웨스트햄에서 핵심 전력으로 활약했다.',
+    tweet: {
+      author: 'UtdXclusive / Nathan Salt',
+      initials: 'UX',
+      handle: '@UtdXclusive',
+      tier: 2,
+      timeAgo: '방금',
+    },
+    imageUrl: 'https://i.namu.wiki/i/0TYeAPJcH0vdzZNqPfdgzrS5Fg4IGnMo6-7A-cXA7sYqsHbevXDBWeC3d6W8fVCDnV4vcKnpYMCXxnY1xECkKw.webp',
+    club: 'MUN',
+    status: 'Talks',
+    hashtags: ['#마테우스페르난데스', '#맨유', '#웨스트햄'],
+    reactions: 7800,
+    comments: 2900,
+    bookmarks: 780,
+    shares: 390,
+    voteFor: 63,
+    voteAgainst: 37,
+    voteForLabel: '영입해야 한다',
+    voteAgainstLabel: '필요 없다',
+    participants: 2900,
+    recentTrend: { pct: 4, direction: 'for', time: '30분' },
+    debateQuestion: '맨유, 마테우스 페르난데스 영입해야 할까?',
+    aiNarrative: '아스날·PSG와 경쟁 구도 속에 맨유가 선수 영입 의지를 재확인했다. 필요성에 대한 팬들 반응은 엇갈린다.',
+    aiSummary: {
+      for: ['미드필드 보강은 이번 여름 맨유의 최우선 과제', '웨스트햄 강등 시 이적료 협상에서 유리한 위치', '포르투갈 미드필더로 브루노와 호흡도 기대 가능'],
+      against: ['아스날·PSG와의 경쟁에서 맨유가 매력적인 선택지가 아니다', '미드필드 외에 더 급한 포지션이 있다', '검증된 선수가 아닌 추가 도박은 피해야 한다'],
+    },
+    argumentPoints: [
+      { id: 'mf1', text: '미드필드 보강 없이는 내년도 똑같다', stance: 'for', comments: 423 },
+      { id: 'mf2', text: '아스날이 원하는 선수면 맨유도 진지하게 봐야 한다', stance: 'for', comments: 312 },
+      { id: 'mf3', text: 'PSG·아스날과 경쟁? 현실적으로 힘들다', stance: 'against', comments: 267 },
+    ],
+    comments_data: [
+      { id: 1, rank: '01', initials: 'MF', user: '@manu_fan', club: 'MUN', timeAgo: '10분', text: '아스날이 관심 있다는 것만으로도 영입 가치가 증명된다', likes: 2134, stance: 'for' },
+      { id: 2, rank: '02', initials: 'RC', user: '@redcafe', club: 'MUN', timeAgo: '20분', text: '웨스트햄이 강등되면 헐값에 데려올 수 있다. 지금 협상 재개는 타이밍이 좋다', likes: 1678, stance: 'for' },
+      { id: 3, rank: '03', initials: 'AG', user: '@arsenal_gooner', club: 'ARS', timeAgo: '25분', text: '우리도 원하는 선수인데 맨유한테 뺏기지 않았으면 좋겠다', likes: 1234 },
+      { id: 4, rank: '04', initials: 'EK', user: '@epl_kr', timeAgo: '30분', text: 'UtdXclusive 보도는 신뢰도 확인이 필요하다. 일단 지켜봐야', likes: 890, stance: 'against' },
+    ],
+  },
+
   // ── p24: 바이인디르 맨유 이탈 가능성 (hot_debate / MUN) ────────────
   {
     id: 'p24',
