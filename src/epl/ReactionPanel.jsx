@@ -368,7 +368,7 @@ function ArgumentsTab({ post, vote }) {
 /* ─── Tabs + comments section ─── */
 
 function CommentsSection({ post, vote, tab, onTabChange }) {
-  const tabs = post.type === 'debate' || post.type === 'today_debate'
+  const tabs = post.type === 'debate' || post.type === 'today_debate' || post.type === 'hot_debate'
     ? ['best', 'live', 'args']
     : ['best', 'live'];
 
@@ -424,7 +424,7 @@ export default function ReactionPanel({ post, vote, onVote, onClose }) {
   const [visible, setVisible] = useState(false);
   const [collapsed, setCollapsed] = useState(!!vote);
   const [tab, setTab] = useState('best');
-  const isDebate = post.type === 'debate' || post.type === 'today_debate';
+  const isDebate = post.type === 'debate' || post.type === 'today_debate' || post.type === 'hot_debate';
   const statusColor = STATUS_COLOR[post.status] || '#9ca3af';
 
   useEffect(() => {
