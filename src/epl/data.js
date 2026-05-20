@@ -8,6 +8,102 @@ export const TEAMS = [
 ];
 
 export const POSTS = [
+  // ── p17: 아스날 21년 만에 우승 확정 (today_debate / ARS) ──────────
+  {
+    id: 'p17',
+    type: 'today_debate',
+    badge: 'TODAY DEBATE',
+    title: '아스날 21년 만에\n우승 확정',
+    summary: '맨시티가 본머스와 1:1 무승부. 아스날이 마지막 라운드를 앞두고 21년 만의 우승을 확정지었다.',
+    briefing: '새뮤얼 럭허스트 보도다. 맨시티가 본머스에 발목이 잡히며 아스날의 21년 만의 리그 우승이 최종 확정됐다. 럭허스트는 "아스날은 항상 이번 시즌 이길 팀이었다"며, 스토크·볼턴·블랙번에 치이던 시절에서 완전히 달라진 팀이 됐다고 평가했다.',
+    tweet: {
+      author: 'Samuel Luckhurst',
+      initials: 'SL',
+      handle: '@samuelluckhurst',
+      tier: 2,
+      timeAgo: '3시간 전',
+    },
+    imageUrl: 'https://pbs.twimg.com/media/HItdVOVXUAE-IWH.jpg',
+    club: 'ARS',
+    status: 'Official',
+    hashtags: ['#아스날', '#EPL우승', '#21년만에'],
+    reactions: 18900,
+    comments: 8200,
+    bookmarks: 3400,
+    shares: 2100,
+    voteFor: 74,
+    voteAgainst: 26,
+    voteForLabel: '자격 있었다',
+    voteAgainstLabel: '운이었다',
+    participants: 8200,
+    recentTrend: { pct: 5, direction: 'for', time: '30분' },
+    debateQuestion: '아스날, 이번 시즌 우승할 자격이 있었나?',
+    aiNarrative: '21년의 기다림이 끝났다. 아스날이 마침내 챔피언이 됐다. 하지만 맨시티의 자멸로 확정됐다는 시각도 있어 팬들 사이 의견이 갈린다.',
+    aiSummary: {
+      for: ['시즌 내내 가장 일관된 퍼포먼스를 보여줬다', '하베르츠·라야 등 결정적 순간마다 팀을 살렸다', '아르테타 체제의 성장이 눈에 띄게 뚜렷했다'],
+      against: ['맨시티가 알아서 무너진 면이 분명히 있다', '빅게임 직접 맞대결 성적을 따져봐야 한다', '운의 요소도 무시할 수 없다'],
+    },
+    argumentPoints: [
+      { id: 'ar1', text: '시즌 내내 가장 안정적 — 아르테타의 완성형 팀', stance: 'for', comments: 567 },
+      { id: 'ar2', text: '맨시티 자멸 덕분에 확정됐다는 느낌이 든다', stance: 'against', comments: 312 },
+      { id: 'ar3', text: '21년의 기다림 자체가 이미 충분한 자격이다', stance: 'neutral', comments: 445 },
+    ],
+    comments_data: [
+      { id: 1, rank: '01', initials: 'AG', user: '@arsenal_gooner', club: 'ARS', timeAgo: '30분', text: '드디어... 21년이다. 눈물 난다', likes: 5643, stance: 'for' },
+      { id: 2, rank: '02', initials: 'GK', user: '@gooner_kr', club: 'ARS', timeAgo: '45분', text: '아르테타 정말 대단하다. 이 팀을 여기까지 만들었다', likes: 4231, stance: 'for' },
+      { id: 3, rank: '03', initials: 'MC', user: '@mcfc_forever', club: 'MCI', timeAgo: '1시간', text: '맨시티 팬으로서 인정한다. 이번 시즌은 아스날이 더 나았다', likes: 2891, stance: 'for' },
+      { id: 4, rank: '04', initials: 'EK', user: '@epl_kr', timeAgo: '1시간', text: '자격 논쟁이 무슨 의미가 있냐. 이긴 팀이 챔피언이다', likes: 2134 },
+    ],
+  },
+
+  // ── p16: 토트넘 강등권 마지막 라운드 (today_debate / TOT) ─────────
+  {
+    id: 'p16',
+    type: 'today_debate',
+    badge: 'TODAY DEBATE',
+    title: '데제르비 "강등 회피가\n트로피보다 중요"',
+    summary: '첼시에 2:1 패배로 강등권 탈출이 마지막 라운드로 넘어갔다. 데제르비 감독은 자존심과 역사가 걸렸다고 했다.',
+    briefing: '제이 해리스(디 애슬레틱) 보도다. 토트넘이 첼시에 2:1로 패하며 강등권 탈출이 마지막 라운드까지 넘어갔다. 데제르비 감독은 "강등을 피하는 것이 트로피를 드는 것보다 중요하다"고 밝히며 지난 시즌 유로파리그 우승을 언급했다. 클럽의 자존심과 역사가 걸린 싸움이라고 강조했다.',
+    tweet: {
+      author: 'Jay Harris / The Athletic',
+      initials: 'JH',
+      handle: '@jaydmharris',
+      tier: 1,
+      timeAgo: '2시간 전',
+    },
+    imageUrl: 'https://platform.cartilagefreecaptain.sbnation.com/wp-content/uploads/sites/60/2026/05/gettyimages-2277159165.jpg?quality=90&strip=all&crop=0%2C0.02516356316054%2C100%2C99.949672873679&w=2400',
+    club: 'TOT',
+    status: 'Opinion',
+    hashtags: ['#토트넘', '#강등', '#데제르비'],
+    reactions: 4100,
+    comments: 2800,
+    bookmarks: 445,
+    shares: 223,
+    voteFor: 38,
+    voteAgainst: 62,
+    voteForLabel: '잔류한다',
+    voteAgainstLabel: '강등된다',
+    participants: 2800,
+    recentTrend: { pct: 8, direction: 'against', time: '30분' },
+    debateQuestion: '마지막 라운드, 토트넘 강등 피할 수 있을까?',
+    aiNarrative: '유러피언리그 우승팀이 강등권에서 마지막 라운드를 기다리게 됐다. 데제르비 감독 스스로 강등 위기를 인정한 셈이어서 팬들의 긴장감이 극에 달했다.',
+    aiSummary: {
+      for: ['마지막 라운드 상대 일정이 상대적으로 유리하다', '강등 회피 의지만큼은 역대급으로 높다', '데제르비 감독 체제에서 전술적 안정감 회복 조짐'],
+      against: ['첼시에도 졌다 — 현재 폼으로는 불안하다', '감독 본인이 강등 위기를 사실상 인정했다', '유러피언리그 피로도가 시즌 내내 누적됐다'],
+    },
+    argumentPoints: [
+      { id: 't1', text: '마지막 라운드 상대 일정이 토트넘에게 유리하다', stance: 'for', comments: 234 },
+      { id: 't2', text: '이 폼으로 강등 피한다고? 현실적으로 힘들다', stance: 'against', comments: 312 },
+      { id: 't3', text: '데제르비의 솔직한 발언이 오히려 팀을 단결시킬 수 있다', stance: 'neutral', comments: 156 },
+    ],
+    comments_data: [
+      { id: 1, rank: '01', initials: 'TK', user: '@thfc_kr', club: 'TOT', timeAgo: '30분', text: '유로파 우승하고 강등이라니... 이게 말이 되는 상황이냐', likes: 1023, stance: 'against' },
+      { id: 2, rank: '02', initials: 'SP', user: '@spurs_kr', club: 'TOT', timeAgo: '45분', text: '데제르비 솔직한 거 인정. 그냥 다 보여주는 스타일이잖아', likes: 734, stance: 'for' },
+      { id: 3, rank: '03', initials: 'EK', user: '@epl_kr', timeAgo: '1시간', text: '마지막 라운드 상대가 누군지가 제일 중요하다. 확인해봐야 함', likes: 567 },
+      { id: 4, rank: '04', initials: 'PL', user: '@prem_legacy', timeAgo: '1시간', text: '이 팀은 진짜 시즌 내내 롤러코스터였다. 마지막도 그렇게 끝나나', likes: 412, stance: 'against' },
+    ],
+  },
+
   // ── p1: 카세미루 이별 오피셜 (debate / MUN) ─────────────────────
   {
     id: 'p1',
