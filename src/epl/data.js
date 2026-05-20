@@ -8,6 +8,54 @@ export const TEAMS = [
 ];
 
 export const POSTS = [
+  // ── p20: 맷 로 튀르키예 국기 — 일디즈 vs 귈러 (hot_debate / CHE) ──
+  {
+    id: 'p20',
+    type: 'hot_debate',
+    badge: 'HOT DEBATE',
+    title: '맷 로, 튀르키예 국기 게시\n첼시 이적 힌트?',
+    summary: '첼시 핵심 기자 맷 로가 설명 없이 튀르키예 국기를 올렸다. 현재 첼시와 연결되는 튀르키예 국적 선수로는 유벤투스 윌디즈가 거론되고 있다.',
+    briefing: '첼시 핵심 기자 맷 로가 설명 없이 튀르키예 국기만 게시했다. 맷 로는 과거에도 이런 방식으로 이적 힌트를 남긴 전례가 있어 팬들의 관심이 집중되고 있다. 현재 첼시와 연결되는 튀르키예 국적 선수로는 유벤투스 소속 케난 윌디즈가 유력하게 거론되고 있으며, 레알 마드리드 아르다 귈러의 이름도 일부 팬들 사이에서 언급되고 있다. 다만 맷 로는 현재까지 어떤 선수도 구체적으로 지목하지 않았다.',
+    tweet: {
+      author: 'Matt Law',
+      initials: 'ML',
+      handle: '@Matt_Law_DT',
+      tier: 1,
+      timeAgo: '방금',
+    },
+    imageUrl: 'https://blog.kakaocdn.net/dna/bDXO6J/btsOe1XqL6F/AAAAAAAAAAAAAAAAAAAAAJHzQOVmWJgq8195W46Pd1UFawm5OPgHIKT7eUTDQ92C/img.jpg?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&expires=1780239599&allow_ip=&allow_referer=&signature=FaAc8R3bo9l6y4Cp3Kk8O89Fkho%3D',
+    club: 'CHE',
+    status: 'Rumour',
+    hashtags: ['#첼시', '#윌디즈', '#귈러', '#이적루머'],
+    reactions: 6200,
+    comments: 3100,
+    bookmarks: 890,
+    shares: 410,
+    voteFor: 61,
+    voteAgainst: 39,
+    voteForLabel: '윌디즈',
+    voteAgainstLabel: '귈러',
+    participants: 3100,
+    recentTrend: { pct: 4, direction: 'for', time: '30분' },
+    debateQuestion: '첼시에 더 필요한 영입은?',
+    aiNarrative: '맷 로의 튀르키예 국기 한 장이 팬들 사이에서 논쟁을 불러일으켰다. 윌디즈냐 귈러냐 — 첼시 팬들의 의견이 갈리고 있다.',
+    aiSummary: {
+      for: ['윌디즈는 유벤투스에서 이미 주전으로 증명됐다', '첼시 스타일에 맞는 직선적인 드리블과 슈팅', '나이(20) 대비 완성도가 높아 즉전감으로 손색없다'],
+      against: ['귈러는 레알 마드리드 출신 — 잠재력이 다르다', '창의성과 패스 능력은 귈러가 한 수 위라는 평가', '아직 어리지만 대형 클럽 경험치를 갖고 있다'],
+    },
+    argumentPoints: [
+      { id: 'c1', text: '윌디즈 — 유벤투스에서 검증된 즉전감 확보', stance: 'for', comments: 412 },
+      { id: 'c2', text: '귈러 — 레알 출신, 장기적으로 더 큰 그림이다', stance: 'against', comments: 356 },
+      { id: 'c3', text: '둘 다 좋지만 포지션 중복 고려해야 한다', stance: 'neutral', comments: 198 },
+    ],
+    comments_data: [
+      { id: 1, rank: '01', initials: 'CK', user: '@chelsea_kr', club: 'CHE', timeAgo: '5분', text: '맷 로가 이 식으로 올리면 진짜라는 거 첼시 팬이면 다 안다', likes: 2341, stance: 'for' },
+      { id: 2, rank: '02', initials: 'WD', user: '@yildiz_fan', club: 'CHE', timeAgo: '10분', text: '윌디즈 영입이면 진짜 기대된다. 유벤투스에서 이미 검증됐잖아', likes: 1876, stance: 'for' },
+      { id: 3, rank: '03', initials: 'AG', user: '@guler_watch', timeAgo: '15분', text: '귈러도 가능성 있다. 레알에서 출전 기회 못 받고 있어서 이적 가능성 있음', likes: 1234, stance: 'against' },
+      { id: 4, rank: '04', initials: 'EK', user: '@epl_kr', timeAgo: '20분', text: '맷 로 국기 시리즈는 거의 적중률 100% 아니었나. 기대된다', likes: 987 },
+    ],
+  },
+
   // ── p17: 아스날 21년 만에 우승 확정 (today_debate / ARS) ──────────
   {
     id: 'p17',
