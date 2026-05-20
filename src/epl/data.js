@@ -8,6 +8,54 @@ export const TEAMS = [
 ];
 
 export const POSTS = [
+  // ── p24: 바이인디르 맨유 이탈 가능성 (hot_debate / MUN) ────────────
+  {
+    id: 'p24',
+    type: 'hot_debate',
+    badge: 'HOT DEBATE',
+    title: '바이인디르, 이번 여름\n맨유 이탈 가능성',
+    summary: '알타이 바이인디르가 이번 여름 맨유를 떠날 수 있는 것으로 알려졌다. 베식타쉬가 관심을 유지하고 있으나 최근 감독 교체로 협상 여부는 미지수다.',
+    briefing: '파브리지오 로마노 보도다. 알타이 바이인디르가 이번 여름 맨체스터 유나이티드를 떠날 수 있는 것으로 전해졌다. 베식타쉬가 지속적인 관심을 보이고 있으나, 최근 감독 교체로 인해 새 감독의 의향에 따라 협상 성사 여부가 결정될 전망이다. 바이인디르는 2023년 여름 맨유에 합류한 튀르키예 국적 골키퍼로, 오나나가 주전을 굳히면서 출전 기회가 크게 줄어든 상태다.',
+    tweet: {
+      author: 'Fabrizio Romano',
+      initials: 'FR',
+      handle: '@FabrizioRomano',
+      tier: 1,
+      timeAgo: '23시간 전',
+    },
+    imageUrl: 'https://t1.daumcdn.net/media/img-section/sports13/player/14/909328.jpg',
+    club: 'MUN',
+    status: 'Rumour',
+    hashtags: ['#바이인디르', '#맨유', '#베식타쉬'],
+    reactions: 4600,
+    comments: 1900,
+    bookmarks: 560,
+    shares: 280,
+    voteFor: 58,
+    voteAgainst: 42,
+    voteForLabel: '팔아야 한다',
+    voteAgainstLabel: '잡아야 한다',
+    participants: 1900,
+    recentTrend: { pct: 3, direction: 'for', time: '30분' },
+    debateQuestion: '맨유, 바이인디르 이번 여름 매각해야 할까?',
+    aiNarrative: '오나나 체제에서 사실상 벤치 신세가 된 바이인디르. 팬들 사이에서도 매각이냐 잔류냐 의견이 나뉜다.',
+    aiSummary: {
+      for: ['오나나가 확실한 주전인 이상 자리가 없다', '출전 기회를 위해 이적이 선수 본인에게도 이득', '이적료를 받아 다른 포지션 보강에 쓰는 게 낫다'],
+      against: ['백업 골키퍼 퀄리티를 유지하는 것도 중요하다', '오나나 부상 시 검증된 대안이 필요하다', '바이인디르는 아직 26세 — 활용 가치가 남아 있다'],
+    },
+    argumentPoints: [
+      { id: 'ab1', text: '오나나 시대에 바이인디르 자리는 없다 — 팔아야 한다', stance: 'for', comments: 345 },
+      { id: 'ab2', text: '백업 골키퍼도 품질이 중요하다 — 내보내면 후회한다', stance: 'against', comments: 234 },
+      { id: 'ab3', text: '베식타쉬 새 감독 결정 기다려봐야 한다', stance: 'neutral', comments: 178 },
+    ],
+    comments_data: [
+      { id: 1, rank: '01', initials: 'MF', user: '@manu_fan', club: 'MUN', timeAgo: '1시간', text: '오나나 있는 이상 바이인디르는 명단에서 의미가 없다. 보내줘야 한다', likes: 1876, stance: 'for' },
+      { id: 2, rank: '02', initials: 'RC', user: '@redcafe', club: 'MUN', timeAgo: '2시간', text: '백업 GK도 중요하다. 아무나 갖다 쓸 수 있는 포지션이 아니다', likes: 1243, stance: 'against' },
+      { id: 3, rank: '03', initials: 'EK', user: '@epl_kr', timeAgo: '3시간', text: '베식타쉬 새 감독이 원하지 않으면 어차피 협상도 없는 거다', likes: 891 },
+      { id: 4, rank: '04', initials: 'PL', user: '@prem_legacy', timeAgo: '4시간', text: '26살에 EPL 경험까지 있는 골키퍼를 베식타쉬에 보내는 게 맞나 싶다', likes: 612, stance: 'against' },
+    ],
+  },
+
   // ── p23: 자비 알론소 첼시 감독 선임 (hot_debate / CHE) ─────────────
   {
     id: 'p23',
