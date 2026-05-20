@@ -56,6 +56,39 @@ export const POSTS = [
     ],
   },
 
+  // ── p18: 펩 과르디올라 아스날 축하 (sentimental / MCI) ────────────
+  {
+    id: 'p18',
+    type: 'sentimental',
+    title: '펩 과르디올라,\n"축하한다, 아스날"',
+    summary: '라이벌에게 건네는 한 마디. 10년간 EPL을 지배한 펩이 아스날의 우승을 직접 인정했다.',
+    briefing: '파브리지오 로마노 보도다. 펩 과르디올라가 아스날을 향해 "Congratulations, Arsenal"이라는 한 마디를 남겼다. 맨시티를 이끌며 리그를 지배했던 감독이, 올 시즌 자신의 팀을 꺾은 라이벌의 우승을 담담하게 인정한 장면이다.',
+    tweet: {
+      author: 'Fabrizio Romano',
+      initials: 'FR',
+      handle: '@FabrizioRomano',
+      tier: 1,
+      timeAgo: '1시간 전',
+    },
+    imageUrl: 'https://d2x51gyc4ptf2q.cloudfront.net/content/uploads/2026/05/19212211/man-city-manager-pep-guardiola-1320x742.jpg',
+    club: 'MCI',
+    status: 'Official',
+    hashtags: ['#펩과르디올라', '#아스날우승', '#라이벌'],
+    reactions: 9800,
+    comments: 2100,
+    bookmarks: 1230,
+    shares: 678,
+    gradientFrom: '#001a38',
+    accentColor: '#6dc1e7',
+    icon: '🔵',
+    comments_data: [
+      { id: 1, rank: '01', initials: 'AG', user: '@arsenal_gooner', club: 'ARS', timeAgo: '20분', text: '펩이 직접 축하해줬다. 이게 진짜 챔피언의 무게감이다', likes: 3421 },
+      { id: 2, rank: '02', initials: 'MC', user: '@mcfc_forever', club: 'MCI', timeAgo: '30분', text: '맨시티 팬이지만 펩다운 모습이다. 품격 있다', likes: 2678 },
+      { id: 3, rank: '03', initials: 'GK', user: '@gooner_kr', club: 'ARS', timeAgo: '45분', text: '아스날 팬으로서 펩한테 받는 축하가 더 의미 있게 느껴진다', likes: 2134 },
+      { id: 4, rank: '04', initials: 'EK', user: '@epl_kr', timeAgo: '1시간', text: '10년 라이벌 구도가 이렇게 마무리되는 거 보니까 진짜 한 시대가 끝났다는 게 실감난다', likes: 1567 },
+    ],
+  },
+
   // ── p16: 토트넘 강등권 마지막 라운드 (today_debate / TOT) ─────────
   {
     id: 'p16',
@@ -101,6 +134,38 @@ export const POSTS = [
       { id: 2, rank: '02', initials: 'SP', user: '@spurs_kr', club: 'TOT', timeAgo: '45분', text: '데제르비 솔직한 거 인정. 그냥 다 보여주는 스타일이잖아', likes: 734, stance: 'for' },
       { id: 3, rank: '03', initials: 'EK', user: '@epl_kr', timeAgo: '1시간', text: '마지막 라운드 상대가 누군지가 제일 중요하다. 확인해봐야 함', likes: 567 },
       { id: 4, rank: '04', initials: 'PL', user: '@prem_legacy', timeAgo: '1시간', text: '이 팀은 진짜 시즌 내내 롤러코스터였다. 마지막도 그렇게 끝나나', likes: 412, stance: 'against' },
+    ],
+  },
+
+  // ── p19: 호날두 6번째 월드컵 오피셜 (sentimental / 중립) ─────────
+  {
+    id: 'p19',
+    type: 'sentimental',
+    title: '호날두, 6번째\n월드컵 출전 오피셜',
+    summary: '2006년부터 2026년까지, 20년에 걸친 월드컵 여정. 마지막 무대에서 불태운다.',
+    briefing: '파브리지오 로마노 보도다. 크리스티아누 호날두의 2026 북중미 월드컵 출전이 공식 확정됐다. 2006년 독일을 시작으로 2010, 2014, 2018, 2022에 이어 여섯 번째 무대다. 마지막이 될 가능성이 높은 이번 대회에서 어떤 활약을 펼칠지 전 세계의 관심이 쏠리고 있다.',
+    tweet: {
+      author: 'Fabrizio Romano',
+      initials: 'FR',
+      handle: '@FabrizioRomano',
+      tier: 1,
+      timeAgo: '14시간 전',
+    },
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/8/8b/Cristiano_Ronaldo_WC2022_-_01_%28cropped%29.jpg',
+    status: 'Official',
+    hashtags: ['#호날두', '#월드컵', '#6번째'],
+    reactions: 24500,
+    comments: 4800,
+    bookmarks: 5600,
+    shares: 3200,
+    gradientFrom: '#1a0000',
+    accentColor: '#ef4444',
+    icon: '🇵🇹',
+    comments_data: [
+      { id: 1, rank: '01', initials: 'CR', user: '@cr7_kr', timeAgo: '30분', text: '6번이다. 진짜 괴물이 맞다. 이게 가능한 일이냐', likes: 7823 },
+      { id: 2, rank: '02', initials: 'WC', user: '@worldcup_kr', timeAgo: '45분', text: '2006년 독일부터 봐온 사람으로서 이 순간이 너무 감동이다', likes: 5634 },
+      { id: 3, rank: '03', initials: 'FK', user: '@football_kr', timeAgo: '1시간', text: '메시는 은퇴하고 호날두는 6번째 월드컵. 이 시대 마지막 목격자가 된 기분', likes: 4291 },
+      { id: 4, rank: '04', initials: 'BR', user: '@brazil_kr', timeAgo: '1시간', text: '제발 이번엔 우승 한 번만. 마지막이잖아', likes: 3156 },
     ],
   },
 
