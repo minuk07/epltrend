@@ -170,6 +170,39 @@ export const POSTS = [
     ],
   },
 
+  // ── p22: 맥스 다우먼 EPL 최연소 우승자 (sentimental / ARS) ─────────
+  {
+    id: 'p22',
+    type: 'sentimental',
+    title: '다우먼, EPL 역대\n최연소 우승자 등극',
+    summary: '맥스 다우먼이 16세 139일의 나이로 EPL 역대 최연소 우승자 기록을 세웠다. 아스날의 리그 우승 멤버에 이름을 올리며 역사를 새로 썼다.',
+    briefing: '아스날 소속 맥스 다우먼이 16세 139일의 나이로 EPL 역대 최연소 우승자 기록을 수립했다. 다우먼은 이번 시즌 아스날 1군에 등록돼 우승 멤버로 이름을 올렸다. 16세의 나이에 리그 우승 메달을 차지한 선수는 EPL 역사상 전례가 없는 것으로 알려졌다. 파브리지오 로마노가 이 기록을 직접 전하며 주목받고 있다.',
+    tweet: {
+      author: 'Fabrizio Romano',
+      initials: 'FR',
+      handle: '@FabrizioRomano',
+      tier: 1,
+      timeAgo: '19분 전',
+    },
+    imageUrl: 'https://e0.365dm.com/25/08/1600x900/skysports-max-dowman-arsenal_7000574.jpg?20250824214153',
+    club: 'ARS',
+    status: 'Official',
+    hashtags: ['#맥스다우먼', '#아스날', '#최연소우승'],
+    reactions: 9000,
+    comments: 2100,
+    bookmarks: 980,
+    shares: 670,
+    gradientFrom: '#1a0808',
+    accentColor: '#ef0107',
+    icon: '🏆',
+    comments_data: [
+      { id: 1, rank: '01', initials: 'AG', user: '@arsenal_gooner', club: 'ARS', timeAgo: '10분', text: '16세 139일... 말이 되는 숫자냐. 이 클럽 진짜 뭔가 있다', likes: 3812 },
+      { id: 2, rank: '02', initials: 'GK', user: '@gooner_kr', club: 'ARS', timeAgo: '15분', text: '우승 멤버에 이름 올릴 때 나이가 16살이라니. 앞으로가 더 기대되는 선수다', likes: 2943 },
+      { id: 3, rank: '03', initials: 'EK', user: '@epl_kr', timeAgo: '20분', text: 'EPL 130년 역사에서 최연소 우승. 숫자가 그냥 레전드다', likes: 2156 },
+      { id: 4, rank: '04', initials: 'PL', user: '@prem_legacy', timeAgo: '25분', text: '등번호 56번이 이 기록을 갖게 될 줄은 몰랐다', likes: 1478 },
+    ],
+  },
+
   // ── p16: 토트넘 강등권 마지막 라운드 (today_debate / TOT) ─────────
   {
     id: 'p16',
