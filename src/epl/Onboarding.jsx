@@ -291,7 +291,6 @@ export default function Onboarding({ onComplete }) {
   const [selectedTeam, setSelectedTeam] = useState(TEAMS[0]); // 기본값: Manchester United
 
   const complete = () => {
-    localStorage.setItem('reax_onboarded', '1');
     localStorage.setItem('reax_team', JSON.stringify(selectedTeam));
     onComplete(selectedTeam);
   };

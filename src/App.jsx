@@ -4,9 +4,7 @@ import EPLFeed from './epl/EPLFeed'
 import Onboarding from './epl/Onboarding'
 
 export default function App() {
-  const [onboarded, setOnboarded] = useState(
-    () => localStorage.getItem('reax_onboarded') === '1'
-  )
+  const [onboarded, setOnboarded] = useState(false)
   const [selectedTeam, setSelectedTeam] = useState(() => {
     try { return JSON.parse(localStorage.getItem('reax_team')); }
     catch { return null; }
