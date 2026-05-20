@@ -181,7 +181,7 @@ function VoteBarMini({ post, voted }) {
 }
 
 function FeedCard({ post, selectedTeam, onOpen, vote }) {
-  const isDebate = post.type === 'debate' || post.type === 'today_debate';
+  const isDebate = post.type === 'debate' || post.type === 'today_debate' || post.type === 'hot_debate';
   const isToday = post.type === 'today_debate';
   const isSentimental = post.type === 'sentimental';
   const accent = isToday ? '#fbbf24' : '#e63946';
