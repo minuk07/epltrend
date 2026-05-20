@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { POSTS } from './data';
 import ReactionPanel from './ReactionPanel';
 
@@ -293,11 +293,15 @@ function FeedCard({ post, selectedTeam, onOpen, vote }) {
 }
 
 /* ─── Feed tab ─── */
-function FeedView({ posts, selectedTeam, onOpen, onIndexChange, votes }) {
+function FeedView({ posts, selectedTeam, onOpen, onIndexChange, votes, onRead }) {
   const scrollRef = useRef(null);
+  const readTimerRef = useRef(null);
 
   useEffect(() => {
     if (scrollRef.current) scrollRef.current.scrollTop = 0;
+    readTimerRef.current = setTimeout(() => onRead(posts[0]?.id), 2000);
+    return () => clearTimeout(readTimerRef.current);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -305,11 +309,18 @@ function FeedView({ posts, selectedTeam, onOpen, onIndexChange, votes }) {
     if (!el) return;
     const onScroll = () => {
       const h = el.clientHeight;
-      if (h > 0) onIndexChange(Math.min(Math.round(el.scrollTop / h), posts.length - 1));
+      if (h <= 0) return;
+      const idx = Math.min(Math.round(el.scrollTop / h), posts.length - 1);
+      onIndexChange(idx);
+      clearTimeout(readTimerRef.current);
+      readTimerRef.current = setTimeout(() => onRead(posts[idx]?.id), 2000);
     };
     el.addEventListener('scroll', onScroll, { passive: true });
-    return () => el.removeEventListener('scroll', onScroll);
-  }, [posts.length, onIndexChange]);
+    return () => {
+      el.removeEventListener('scroll', onScroll);
+      clearTimeout(readTimerRef.current);
+    };
+  }, [posts, onIndexChange, onRead]);
 
   return (
     <div ref={scrollRef}
@@ -729,6 +740,16 @@ function BottomNav({ activeTab, onChange, selectedTeam }) {
   );
 }
 
+function sortFeed(posts, myTeam, readIds) {
+  return [...posts].sort((a, b) => {
+    const aScore = (myTeam && a.club === myTeam ? 2 : 0) + (readIds.has(a.id) ? 0 : 1);
+    const bScore = (myTeam && b.club === myTeam ? 2 : 0) + (readIds.has(b.id) ? 0 : 1);
+    return bScore - aScore;
+  });
+}
+
+const STORAGE_KEY = 'reax_read';
+
 /* ─── Main export ─── */
 export default function EPLFeed({ selectedTeam }) {
   const [activeTab, setActiveTab] = useState('feed');
@@ -736,20 +757,30 @@ export default function EPLFeed({ selectedTeam }) {
   const [votes, setVotes] = useState({});
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  const [readIds, setReadIds] = useState(
+    () => new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'))
+  );
+
+  // 마운트 시 한 번만 정렬 — 세션 중 readIds 변경해도 순서 유지
+  const [sortedPosts] = useState(() => {
+    const ids = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'));
+    return sortFeed(POSTS, selectedTeam?.shortName, ids);
+  });
+
+  const markRead = useCallback((postId) => {
+    if (!postId) return;
+    setReadIds(prev => {
+      if (prev.has(postId)) return prev;
+      const next = new Set(prev);
+      next.add(postId);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify([...next]));
+      return next;
+    });
+  }, []);
+
   const handleVote = useCallback((postId, stance) => {
     setVotes(v => ({ ...v, [postId]: stance }));
   }, []);
-
-  // 선택 팀 게시물을 피드 상단에 우선 배치
-  const sortedPosts = useMemo(() => {
-    if (!selectedTeam) return POSTS;
-    const myClub = selectedTeam.shortName;
-    return [...POSTS].sort((a, b) => {
-      const aIsMyClub = a.club === myClub ? -1 : 0;
-      const bIsMyClub = b.club === myClub ? -1 : 0;
-      return aIsMyClub - bIsMyClub;
-    });
-  }, [selectedTeam]);
 
   const isFeedTab = activeTab === 'feed';
 
@@ -763,13 +794,14 @@ export default function EPLFeed({ selectedTeam }) {
           <FeedView
             posts={sortedPosts}
             selectedTeam={selectedTeam}
-            onOpen={setPanelPost}
+            onOpen={(post) => { markRead(post.id); setPanelPost(post); }}
             onIndexChange={setCurrentIndex}
             votes={votes}
+            onRead={markRead}
           />
         )}
         {activeTab === 'hot' && (
-          <HotView posts={POSTS} onOpen={setPanelPost} />
+          <HotView posts={POSTS} onOpen={(post) => { markRead(post.id); setPanelPost(post); }} />
         )}
         {activeTab === 'search' && <SearchView />}
         {activeTab === 'my' && (
@@ -777,7 +809,7 @@ export default function EPLFeed({ selectedTeam }) {
             selectedTeam={selectedTeam}
             votes={votes}
             posts={POSTS}
-            onOpen={setPanelPost}
+            onOpen={(post) => { markRead(post.id); setPanelPost(post); }}
           />
         )}
 
