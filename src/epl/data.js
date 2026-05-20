@@ -56,11 +56,10 @@ export const POSTS = [
     ],
   },
 
-  // ── p25: 마테우스 페르난데스 맨유 협상 재개 (hot_debate / MUN) ──────
+  // ── p25: 마테우스 페르난데스 맨유 협상 재개 (general / MUN) ───────────
   {
     id: 'p25',
-    type: 'hot_debate',
-    badge: 'HOT DEBATE',
+    type: 'general',
     title: '맨유, 마테우스 페르난데스\n협상 재개',
     summary: '맨유가 웨스트햄 소속 마테우스 페르난데스 영입을 위한 협상을 재개한 것으로 알려졌다. 아스날과 PSG도 관심을 보이고 있어 경쟁이 예상된다.',
     briefing: '맨유가 이적 시장 개막을 앞두고 웨스트햄 소속 마테우스 페르난데스를 두고 협상을 재개한 것으로 전해졌다. 아스날과 PSG도 관심을 유지하고 있으며, 웨스트햄이 강등될 경우 약 1억 파운드 규모의 선수 매각이 불가피할 전망이어서 협상 조건이 유리해질 수 있다. 페르난데스는 포르투갈 국적 미드필더로 이번 시즌 웨스트햄에서 핵심 전력으로 활약했다.',
@@ -79,36 +78,18 @@ export const POSTS = [
     comments: 2900,
     bookmarks: 780,
     shares: 390,
-    voteFor: 63,
-    voteAgainst: 37,
-    voteForLabel: '영입해야 한다',
-    voteAgainstLabel: '필요 없다',
-    participants: 2900,
-    recentTrend: { pct: 4, direction: 'for', time: '30분' },
-    debateQuestion: '맨유, 마테우스 페르난데스 영입해야 할까?',
-    aiNarrative: '아스날·PSG와 경쟁 구도 속에 맨유가 선수 영입 의지를 재확인했다. 필요성에 대한 팬들 반응은 엇갈린다.',
-    aiSummary: {
-      for: ['미드필드 보강은 이번 여름 맨유의 최우선 과제', '웨스트햄 강등 시 이적료 협상에서 유리한 위치', '포르투갈 미드필더로 브루노와 호흡도 기대 가능'],
-      against: ['아스날·PSG와의 경쟁에서 맨유가 매력적인 선택지가 아니다', '미드필드 외에 더 급한 포지션이 있다', '검증된 선수가 아닌 추가 도박은 피해야 한다'],
-    },
-    argumentPoints: [
-      { id: 'mf1', text: '미드필드 보강 없이는 내년도 똑같다', stance: 'for', comments: 423 },
-      { id: 'mf2', text: '아스날이 원하는 선수면 맨유도 진지하게 봐야 한다', stance: 'for', comments: 312 },
-      { id: 'mf3', text: 'PSG·아스날과 경쟁? 현실적으로 힘들다', stance: 'against', comments: 267 },
-    ],
     comments_data: [
-      { id: 1, rank: '01', initials: 'MF', user: '@manu_fan', club: 'MUN', timeAgo: '10분', text: '아스날이 관심 있다는 것만으로도 영입 가치가 증명된다', likes: 2134, stance: 'for' },
-      { id: 2, rank: '02', initials: 'RC', user: '@redcafe', club: 'MUN', timeAgo: '20분', text: '웨스트햄이 강등되면 헐값에 데려올 수 있다. 지금 협상 재개는 타이밍이 좋다', likes: 1678, stance: 'for' },
+      { id: 1, rank: '01', initials: 'MF', user: '@manu_fan', club: 'MUN', timeAgo: '10분', text: '아스날이 관심 있다는 것만으로도 영입 가치가 증명된다', likes: 2134 },
+      { id: 2, rank: '02', initials: 'RC', user: '@redcafe', club: 'MUN', timeAgo: '20분', text: '웨스트햄이 강등되면 헐값에 데려올 수 있다. 지금 협상 재개는 타이밍이 좋다', likes: 1678 },
       { id: 3, rank: '03', initials: 'AG', user: '@arsenal_gooner', club: 'ARS', timeAgo: '25분', text: '우리도 원하는 선수인데 맨유한테 뺏기지 않았으면 좋겠다', likes: 1234 },
-      { id: 4, rank: '04', initials: 'EK', user: '@epl_kr', timeAgo: '30분', text: 'UtdXclusive 보도는 신뢰도 확인이 필요하다. 일단 지켜봐야', likes: 890, stance: 'against' },
+      { id: 4, rank: '04', initials: 'EK', user: '@epl_kr', timeAgo: '30분', text: 'UtdXclusive 보도는 신뢰도 확인이 필요하다. 일단 지켜봐야', likes: 890 },
     ],
   },
 
-  // ── p24: 바이인디르 맨유 이탈 가능성 (hot_debate / MUN) ────────────
+  // ── p24: 바이인디르 맨유 이탈 가능성 (general / MUN) ─────────────────
   {
     id: 'p24',
-    type: 'hot_debate',
-    badge: 'HOT DEBATE',
+    type: 'general',
     title: '바이인디르, 이번 여름\n맨유 이탈 가능성',
     summary: '알타이 바이인디르가 이번 여름 맨유를 떠날 수 있는 것으로 알려졌다. 베식타쉬가 관심을 유지하고 있으나 최근 감독 교체로 협상 여부는 미지수다.',
     briefing: '파브리지오 로마노 보도다. 알타이 바이인디르가 이번 여름 맨체스터 유나이티드를 떠날 수 있는 것으로 전해졌다. 베식타쉬가 관심을 유지하고 있으나, 최근 감독 교체 이후 새 감독의 의향에 따라 협상 성사 여부가 결정될 전망이다. 바이인디르는 2023년 여름 맨유에 합류한 튀르키예 국적 골키퍼로, 오나나가 주전 자리를 맡으면서 출전 기회가 줄었다.',
@@ -127,36 +108,18 @@ export const POSTS = [
     comments: 1900,
     bookmarks: 560,
     shares: 280,
-    voteFor: 58,
-    voteAgainst: 42,
-    voteForLabel: '팔아야 한다',
-    voteAgainstLabel: '잡아야 한다',
-    participants: 1900,
-    recentTrend: { pct: 3, direction: 'for', time: '30분' },
-    debateQuestion: '맨유, 바이인디르 이번 여름 매각해야 할까?',
-    aiNarrative: '오나나 체제에서 사실상 벤치 신세가 된 바이인디르. 팬들 사이에서도 매각이냐 잔류냐 의견이 나뉜다.',
-    aiSummary: {
-      for: ['오나나가 확실한 주전인 이상 자리가 없다', '출전 기회를 위해 이적이 선수 본인에게도 이득', '이적료를 받아 다른 포지션 보강에 쓰는 게 낫다'],
-      against: ['백업 골키퍼 퀄리티를 유지하는 것도 중요하다', '오나나 부상 시 검증된 대안이 필요하다', '바이인디르는 아직 26세 — 활용 가치가 남아 있다'],
-    },
-    argumentPoints: [
-      { id: 'ab1', text: '오나나 시대에 바이인디르 자리는 없다 — 팔아야 한다', stance: 'for', comments: 345 },
-      { id: 'ab2', text: '백업 골키퍼도 품질이 중요하다 — 내보내면 후회한다', stance: 'against', comments: 234 },
-      { id: 'ab3', text: '베식타쉬 새 감독 결정 기다려봐야 한다', stance: 'neutral', comments: 178 },
-    ],
     comments_data: [
-      { id: 1, rank: '01', initials: 'MF', user: '@manu_fan', club: 'MUN', timeAgo: '1시간', text: '오나나 있는 이상 바이인디르는 명단에서 의미가 없다. 보내줘야 한다', likes: 1876, stance: 'for' },
-      { id: 2, rank: '02', initials: 'RC', user: '@redcafe', club: 'MUN', timeAgo: '2시간', text: '백업 GK도 중요하다. 아무나 갖다 쓸 수 있는 포지션이 아니다', likes: 1243, stance: 'against' },
+      { id: 1, rank: '01', initials: 'MF', user: '@manu_fan', club: 'MUN', timeAgo: '1시간', text: '오나나 있는 이상 바이인디르는 명단에서 의미가 없다. 보내줘야 한다', likes: 1876 },
+      { id: 2, rank: '02', initials: 'RC', user: '@redcafe', club: 'MUN', timeAgo: '2시간', text: '백업 GK도 중요하다. 아무나 갖다 쓸 수 있는 포지션이 아니다', likes: 1243 },
       { id: 3, rank: '03', initials: 'EK', user: '@epl_kr', timeAgo: '3시간', text: '베식타쉬 새 감독이 원하지 않으면 어차피 협상도 없는 거다', likes: 891 },
-      { id: 4, rank: '04', initials: 'PL', user: '@prem_legacy', timeAgo: '4시간', text: '26살에 EPL 경험까지 있는 골키퍼를 베식타쉬에 보내는 게 맞나 싶다', likes: 612, stance: 'against' },
+      { id: 4, rank: '04', initials: 'PL', user: '@prem_legacy', timeAgo: '4시간', text: '26살에 EPL 경험까지 있는 골키퍼를 베식타쉬에 보내는 게 맞나 싶다', likes: 612 },
     ],
   },
 
-  // ── p23: 자비 알론소 첼시 감독 선임 (hot_debate / CHE) ─────────────
+  // ── p23: 자비 알론소 첼시 감독 선임 (general / CHE) ──────────────────
   {
     id: 'p23',
-    type: 'hot_debate',
-    badge: 'HOT DEBATE',
+    type: 'general',
     title: '첼시, 자비 알론소\n감독 선임 확정',
     summary: '첼시가 자비 알론소를 신임 감독으로 선임했다. 디 애슬레틱은 "경기력 부진 속에서도 알론소 영입에 성공했다"고 전했다.',
     briefing: '첼시가 자비 알론소를 신임 감독으로 선임한 것으로 전해졌다. 디 애슬레틱 첼시 담당 기자 리암 트워미는 "첼시가 경기력이 취약한 상황에서도 알론소 영입을 성사시켰다"고 평가했다. 알론소는 바이어 레버쿠젠을 이끌며 분데스리가 무패 우승을 달성한 감독으로, 유럽 최고 수준의 지도자로 꼽힌다. 다수의 빅클럽이 관심을 보인 알론소를 첼시가 최종 낙점한 것이다.',
@@ -175,26 +138,9 @@ export const POSTS = [
     comments: 5800,
     bookmarks: 2100,
     shares: 1300,
-    voteFor: 67,
-    voteAgainst: 33,
-    voteForLabel: '신의 한 수',
-    voteAgainstLabel: '의문부호',
-    participants: 5800,
-    recentTrend: { pct: 6, direction: 'for', time: '30분' },
-    debateQuestion: '첼시의 자비 알론소 선임, 신의 한 수인가?',
-    aiNarrative: '레버쿠젠의 기적을 만든 알론소가 첼시를 선택했다. 팬들은 기대와 우려 사이에서 판단을 내리고 있다.',
-    aiSummary: {
-      for: ['분데스리가 무패 우승 — 유럽 최고의 검증된 감독', '젊은 선수단을 성장시키는 능력이 입증됐다', '첼시의 거대한 스쿼드를 정리할 적임자'],
-      against: ['EPL 경험이 전혀 없다는 점은 리스크다', '레버쿠젠과 첼시의 환경은 너무 다르다', '구단 구조적 문제를 감독이 해결하기엔 한계가 있다'],
-    },
-    argumentPoints: [
-      { id: 'xa1', text: '무패 우승 감독 — 전술 완성도만큼은 의심할 여지 없다', stance: 'for', comments: 678 },
-      { id: 'xa2', text: 'EPL은 레버쿠젠과 다르다. 적응 기간이 필요하다', stance: 'against', comments: 445 },
-      { id: 'xa3', text: '오너십 문제가 해결되지 않으면 누가 와도 똑같다', stance: 'neutral', comments: 312 },
-    ],
     comments_data: [
-      { id: 1, rank: '01', initials: 'CK', user: '@chelsea_kr', club: 'CHE', timeAgo: '10분', text: '알론소가 오면 진짜 달라질 것 같다. 레버쿠젠에서 한 걸 생각하면', likes: 3241, stance: 'for' },
-      { id: 2, rank: '02', initials: 'EK', user: '@epl_kr', timeAgo: '20분', text: 'EPL 경험 없는 거 아무도 안 신경 쓰나. 리그 수준이 다르다', likes: 2134, stance: 'against' },
+      { id: 1, rank: '01', initials: 'CK', user: '@chelsea_kr', club: 'CHE', timeAgo: '10분', text: '알론소가 오면 진짜 달라질 것 같다. 레버쿠젠에서 한 걸 생각하면', likes: 3241 },
+      { id: 2, rank: '02', initials: 'EK', user: '@epl_kr', timeAgo: '20분', text: 'EPL 경험 없는 거 아무도 안 신경 쓰나. 리그 수준이 다르다', likes: 2134 },
       { id: 3, rank: '03', initials: 'PL', user: '@prem_legacy', timeAgo: '25분', text: '첼시 스쿼드에 문제가 너무 많다. 알론소가 뭘 할 수 있을지 궁금하긴 하다', likes: 1678 },
       { id: 4, rank: '04', initials: 'AG', user: '@arsenal_gooner', club: 'ARS', timeAgo: '30분', text: '솔직히 첼시 팬 아니어도 알론소 EPL 오는 건 기대된다', likes: 1123 },
     ],
