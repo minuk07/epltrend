@@ -233,7 +233,7 @@ function Sidebar({ selectedTeam, filters, onFiltersChange, collapsed }) {
 }
 
 /* ─── Desktop feed card (가로형) ─── */
-function DesktopFeedCard({ post, selected, onSelect, vote }) {
+function DesktopFeedCard({ post, selected, onSelect, vote, fillHeight = false }) {
   const isDebate = post.type === 'debate' || post.type === 'today_debate' || post.type === 'hot_debate';
   const isToday = post.type === 'today_debate';
   const accent = isToday ? '#fbbf24' : '#e63946';
@@ -251,7 +251,8 @@ function DesktopFeedCard({ post, selected, onSelect, vote }) {
         boxShadow: selected
           ? `0 0 0 3px ${isDebate ? accent : '#3b82f6'}15`
           : 'none',
-        minHeight: '180px',
+        minHeight: '220px',
+        ...(fillHeight && { height: '100%', display: 'flex', flexDirection: 'column' }),
       }}>
       {/* Debate top line */}
       {isDebate && (
@@ -260,12 +261,16 @@ function DesktopFeedCard({ post, selected, onSelect, vote }) {
       )}
 
       {/* 가로 그리드: 텍스트 | 이미지 */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 200px' }}>
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: '1fr 220px',
+        ...(fillHeight && { flex: 1, minHeight: 0 }),
+      }}>
         {/* 텍스트 영역 */}
-        <div className="p-4 flex flex-col justify-between min-w-0">
+        <div className="p-5 flex flex-col justify-between min-w-0">
           <div>
             {/* Badges */}
-            <div className="flex items-center gap-2 mb-2.5 flex-wrap">
+            <div className="flex items-center gap-2 mb-3 flex-wrap">
               {isDebate && (
                 <span className="flex items-center gap-1.5 text-xs font-bold px-2 py-1 rounded-full"
                   style={{ background: `${accent}18`, color: accent, border: `1px solid ${accent}35` }}>
@@ -289,17 +294,17 @@ function DesktopFeedCard({ post, selected, onSelect, vote }) {
             </div>
 
             {/* Title */}
-            <h3 className="font-black text-white leading-tight mb-1.5 whitespace-pre-line"
-              style={{ fontSize: '17px', letterSpacing: '-0.3px' }}>
+            <h3 className="font-black text-white leading-tight mb-2 whitespace-pre-line"
+              style={{ fontSize: '18px', letterSpacing: '-0.3px' }}>
               {post.title}
             </h3>
 
-            {/* Summary — 최대 3줄 */}
-            <p className="text-xs leading-relaxed mb-3"
+            {/* Summary */}
+            <p className="text-sm leading-relaxed mb-3"
               style={{
                 color: 'rgba(255,255,255,0.45)',
                 display: '-webkit-box',
-                WebkitLineClamp: 3,
+                WebkitLineClamp: fillHeight ? 6 : 3,
                 WebkitBoxOrient: 'vertical',
                 overflow: 'hidden',
               }}>
@@ -325,7 +330,7 @@ function DesktopFeedCard({ post, selected, onSelect, vote }) {
         </div>
 
         {/* 이미지 영역 */}
-        <div className="relative overflow-hidden" style={{ minHeight: '160px' }}>
+        <div className="relative overflow-hidden" style={{ minHeight: '180px' }}>
           {post.imageUrl ? (
             <img src={post.imageUrl} alt=""
               className="absolute inset-0 w-full h-full"
@@ -333,16 +338,18 @@ function DesktopFeedCard({ post, selected, onSelect, vote }) {
           ) : (
             <div className="absolute inset-0 flex items-center justify-center"
               style={{ background: '#111118' }}>
-              <span style={{ fontSize: '28px', opacity: 0.15 }}>⚽</span>
+              <span style={{ fontSize: '32px', opacity: 0.12 }}>⚽</span>
             </div>
           )}
+          {/* 이미지 좌측 페이드 */}
+          <div className="absolute inset-0"
+            style={{ background: 'linear-gradient(to right, #0a0a14 0%, transparent 30%)' }} />
         </div>
       </div>
 
       {/* 하단 푸터 */}
-      <div className="px-4 py-2.5 flex items-center gap-4"
+      <div className="px-5 py-3 flex items-center gap-4"
         style={{ borderTop: '1px solid #141420' }}>
-        {/* 투표 바 (debate만) */}
         {isDebate && (
           <div style={{ width: '140px', flexShrink: 0 }}>
             {vote ? (
@@ -376,52 +383,6 @@ function DesktopFeedCard({ post, selected, onSelect, vote }) {
   );
 }
 
-/* ─── Preview card (선택된 카드 인접, 흐릿한 한 줄 요약) ─── */
-function PreviewCard({ post }) {
-  const isDebate = post.type === 'debate' || post.type === 'today_debate' || post.type === 'hot_debate';
-  const accent = post.type === 'today_debate' ? '#fbbf24' : '#e63946';
-  const statusCfg = STATUS_CFG[post.status] || STATUS_CFG.Rumour;
-  const clubCfg = CLUB_CFG[post.club] || { bg: '#141420', color: '#9ca3af' };
-
-  return (
-    <div className="rounded-xl px-4 py-2.5 flex items-center gap-2 min-w-0"
-      style={{
-        background: '#0a0a14',
-        border: '1.5px solid #141420',
-        opacity: 0.4,
-        filter: 'blur(1.5px)',
-        pointerEvents: 'none',
-        userSelect: 'none',
-      }}>
-      {isDebate && (
-        <span className="text-xs font-bold px-1.5 py-0.5 rounded-full shrink-0"
-          style={{ background: `${accent}18`, color: accent }}>
-          {post.badge}
-        </span>
-      )}
-      {post.status && (
-        <span className="flex items-center gap-1 text-xs font-bold px-1.5 py-0.5 rounded shrink-0"
-          style={{ background: statusCfg.bg, color: statusCfg.color }}>
-          <span className="w-1 h-1 rounded-full" style={{ background: statusCfg.dot }} />
-          {post.status.toUpperCase()}
-        </span>
-      )}
-      {post.club && (
-        <span className="text-xs font-bold px-1.5 py-0.5 rounded shrink-0"
-          style={{ background: clubCfg.bg, color: clubCfg.color }}>
-          {post.club}
-        </span>
-      )}
-      <span className="text-sm font-semibold text-white truncate flex-1">
-        {post.title.replace('\n', ' ')}
-      </span>
-      {post.tweet && (
-        <span className="text-xs shrink-0" style={{ color: '#3a3a5a' }}>{post.tweet.timeAgo}</span>
-      )}
-    </div>
-  );
-}
-
 /* ─── Feed column ─── */
 const TICKER_ITEMS = [
   '● LIVE  진짜 보내면 안되지', '@jenna_94  드디어 ㅠㅠ 너무 좋다',
@@ -430,16 +391,23 @@ const TICKER_ITEMS = [
   '@lfc_kr  살라 계약 드디어', '@city_kr  홀란드 빨리 낫길',
 ];
 
+const PEEK = 150; // px — prev/next 카드가 보이는 높이
+
 function FeedColumn({ posts, selectedPost, onSelect, votes }) {
   const text = TICKER_ITEMS.map((t, i) => (i > 0 ? `  —  ${t}` : t)).join('');
   const doubled = text + '    —    ' + text;
 
+  const selectedIdx = posts.findIndex(p => p.id === selectedPost?.id);
+  const prevPost = selectedIdx > 0 ? posts[selectedIdx - 1] : null;
+  const nextPost = selectedIdx < posts.length - 1 ? posts[selectedIdx + 1] : null;
+
   return (
     <div className="flex-1 flex flex-col min-w-0"
-      style={{ overflowY: 'auto', scrollbarWidth: 'thin', scrollbarColor: '#1e1e2a transparent' }}>
+      style={{ height: '100vh', overflow: 'hidden' }}>
+
       {/* Header */}
       <div className="shrink-0 px-8 py-4 flex items-center gap-3"
-        style={{ borderBottom: '1px solid #141420', background: '#07070f', position: 'sticky', top: 0, zIndex: 10 }}>
+        style={{ borderBottom: '1px solid #141420', background: '#07070f', zIndex: 10 }}>
         <span className="font-black text-white" style={{ fontSize: '18px' }}>피드</span>
         <span className="text-sm" style={{ color: '#3a3a5a' }}>{posts.length}개 이슈</span>
       </div>
@@ -450,33 +418,85 @@ function FeedColumn({ posts, selectedPost, onSelect, votes }) {
         <div className="live-ticker text-xs" style={{ color: '#4a4a6a' }}>{doubled}</div>
       </div>
 
-      {/* Cards */}
-      <div className="py-6 px-8">
-        <div className="mx-auto space-y-4" style={{ maxWidth: '680px' }}>
-          {posts.length === 0 ? (
-            <div className="text-center py-16" style={{ color: '#3a3a5a' }}>
-              <div className="text-4xl mb-3">🔍</div>
-              <div className="text-sm">필터 조건에 맞는 이슈가 없습니다</div>
-            </div>
-          ) : (() => {
-            const selectedIdx = posts.findIndex(p => p.id === selectedPost?.id);
-            return posts.map((post, idx) => {
-              const isSelected = idx === selectedIdx;
-              const isAdjacent = selectedIdx !== -1 && Math.abs(idx - selectedIdx) === 1;
-              if (isAdjacent) return <PreviewCard key={post.id} post={post} />;
-              return (
-                <DesktopFeedCard
-                  key={post.id}
-                  post={post}
-                  selected={isSelected}
-                  onSelect={() => onSelect(post)}
-                  vote={votes[post.id]}
-                />
-              );
-            });
-          })()}
+      {/* 3-슬롯 카드 뷰포트 */}
+      {posts.length === 0 ? (
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center" style={{ color: '#3a3a5a' }}>
+            <div className="text-4xl mb-3">🔍</div>
+            <div className="text-sm">필터 조건에 맞는 이슈가 없습니다</div>
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="flex-1 overflow-hidden" style={{ padding: '12px 32px 16px' }}>
+          <div className="mx-auto h-full flex flex-col" style={{ maxWidth: '680px', gap: '8px' }}>
+
+            {/* Prev peek — 카드 하단부만 노출 */}
+            {prevPost && (
+              <div
+                onClick={() => onSelect(prevPost)}
+                style={{
+                  flexShrink: 0,
+                  height: PEEK,
+                  overflow: 'hidden',
+                  borderRadius: '16px',
+                  cursor: 'pointer',
+                  position: 'relative',
+                }}>
+                {/* 카드 상단부 노출 (배지+제목 영역) */}
+                <div style={{
+                  opacity: 0.45,
+                  filter: 'blur(1.5px)',
+                  pointerEvents: 'none',
+                }}>
+                  <DesktopFeedCard post={prevPost} selected={false} onSelect={() => {}} vote={votes[prevPost.id]} />
+                </div>
+                {/* 아래쪽 페이드 */}
+                <div className="absolute inset-x-0 bottom-0"
+                  style={{ height: '70px', background: 'linear-gradient(to top, #050508, transparent)', pointerEvents: 'none' }} />
+              </div>
+            )}
+
+            {/* 선택된 카드 — flex:1로 남은 공간 채움 */}
+            <div style={{ flex: 1, minHeight: 0 }}>
+              {selectedPost && (
+                <DesktopFeedCard
+                  post={selectedPost}
+                  selected
+                  onSelect={() => {}}
+                  vote={votes[selectedPost.id]}
+                  fillHeight
+                />
+              )}
+            </div>
+
+            {/* Next peek — 카드 상단부만 노출 */}
+            {nextPost && (
+              <div
+                onClick={() => onSelect(nextPost)}
+                style={{
+                  flexShrink: 0,
+                  height: PEEK,
+                  overflow: 'hidden',
+                  borderRadius: '16px',
+                  cursor: 'pointer',
+                  position: 'relative',
+                }}>
+                <div style={{
+                  opacity: 0.45,
+                  filter: 'blur(1.5px)',
+                  pointerEvents: 'none',
+                }}>
+                  <DesktopFeedCard post={nextPost} selected={false} onSelect={() => {}} vote={votes[nextPost.id]} />
+                </div>
+                {/* 아래쪽 페이드 */}
+                <div className="absolute inset-x-0 bottom-0"
+                  style={{ height: '60px', background: 'linear-gradient(to top, #050508, transparent)', pointerEvents: 'none' }} />
+              </div>
+            )}
+
+          </div>
+        </div>
+      )}
     </div>
   );
 }
