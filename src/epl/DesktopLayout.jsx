@@ -35,38 +35,21 @@ const CLUB_CFG = {
   ARS: { bg: '#3a0000', color: '#ff7070' },
 };
 
-const ALL_STATUSES = ['Official', 'Advanced', 'Talks', 'Interest', 'Rumour'];
-
-function applyFilters(posts, filters) {
-  return posts.filter(post => {
-    if (filters.clubs.length > 0 && !filters.clubs.includes(post.club)) return false;
-    if (filters.statuses.length > 0 && !filters.statuses.includes(post.status)) return false;
-    if (filters.tiers.length > 0 && post.tweet && !filters.tiers.includes(post.tweet.tier)) return false;
-    return true;
-  });
+function isDebateType(post) {
+  return post && (post.type === 'debate' || post.type === 'today_debate' || post.type === 'hot_debate');
 }
 
 /* ─── Sidebar ─── */
-function Sidebar({ selectedTeam, filters, onFiltersChange, collapsed }) {
+function Sidebar({ selectedTeam, clubFilter, onClubFilterChange, posts, selectedPost, onSelectPost, collapsed }) {
   const tc = selectedTeam?.primaryColor || '#3b82f6';
+  const hotPosts = useMemo(() => posts.filter(isDebateType).slice(0, 8), [posts]);
 
   const toggleClub = (club) => {
-    const clubs = filters.clubs.includes(club)
-      ? filters.clubs.filter(c => c !== club)
-      : [...filters.clubs, club];
-    onFiltersChange({ ...filters, clubs });
-  };
-  const toggleStatus = (s) => {
-    const statuses = filters.statuses.includes(s)
-      ? filters.statuses.filter(x => x !== s)
-      : [...filters.statuses, s];
-    onFiltersChange({ ...filters, statuses });
-  };
-  const toggleTier = (t) => {
-    const tiers = filters.tiers.includes(t)
-      ? filters.tiers.filter(x => x !== t)
-      : [...filters.tiers, t];
-    onFiltersChange({ ...filters, tiers });
+    onClubFilterChange(
+      clubFilter.includes(club)
+        ? clubFilter.filter(c => c !== club)
+        : [...clubFilter, club]
+    );
   };
 
   return (
@@ -76,8 +59,6 @@ function Sidebar({ selectedTeam, filters, onFiltersChange, collapsed }) {
         width: collapsed ? '56px' : '240px',
         borderRight: '1px solid #141420',
         background: '#07070f',
-        position: 'sticky',
-        top: 0,
         height: '100vh',
         transition: 'width 0.2s ease',
         overflow: 'hidden',
@@ -112,7 +93,6 @@ function Sidebar({ selectedTeam, filters, onFiltersChange, collapsed }) {
         </div>
       )}
 
-      {/* Icon-only: team dots when collapsed */}
       {collapsed && selectedTeam && (
         <div className="flex justify-center py-3" style={{ borderBottom: '1px solid #141420' }}>
           <div className="w-7 h-7 rounded-full flex items-center justify-center font-black text-xs"
@@ -122,18 +102,16 @@ function Sidebar({ selectedTeam, filters, onFiltersChange, collapsed }) {
         </div>
       )}
 
-      {/* Filters */}
       {!collapsed && (
-        <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5" style={{ scrollbarWidth: 'none' }}>
-
+        <>
           {/* 클럽 필터 */}
-          <div>
+          <div className="px-4 py-4 shrink-0" style={{ borderBottom: '1px solid #141420' }}>
             <div className="text-xs font-bold mb-2.5" style={{ color: '#4a4a6a', letterSpacing: '0.06em' }}>
               클럽 필터
             </div>
             <div className="space-y-0.5">
               {TEAMS.map(team => {
-                const active = filters.clubs.includes(team.shortName);
+                const active = clubFilter.includes(team.shortName);
                 return (
                   <button key={team.shortName} onClick={() => toggleClub(team.shortName)}
                     className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-left"
@@ -151,81 +129,70 @@ function Sidebar({ selectedTeam, filters, onFiltersChange, collapsed }) {
                 );
               })}
             </div>
+            {clubFilter.length > 0 && (
+              <button onClick={() => onClubFilterChange([])}
+                className="w-full mt-2 py-1.5 rounded-lg text-xs font-semibold"
+                style={{ background: '#111118', color: '#4a4a6a', border: '1px solid #1e1e2a' }}>
+                초기화
+              </button>
+            )}
           </div>
 
-          {/* 신뢰도 */}
-          <div>
-            <div className="text-xs font-bold mb-2.5" style={{ color: '#4a4a6a', letterSpacing: '0.06em' }}>
-              소스 신뢰도
+          {/* 지금 뜨는 토론 */}
+          <div className="flex-1 overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
+            <div className="px-4 pt-3 pb-1 shrink-0">
+              <div className="text-xs font-bold flex items-center gap-1.5 mb-2"
+                style={{ color: '#4a4a6a', letterSpacing: '0.06em' }}>
+                <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#e63946' }} />
+                지금 뜨는 토론
+              </div>
             </div>
-            <div className="flex gap-2">
-              {[1, 2].map(t => {
-                const active = filters.tiers.includes(t);
+            <div className="space-y-0.5 px-2 pb-4">
+              {hotPosts.map((post, i) => {
+                const isSelected = selectedPost?.id === post.id;
+                const isToday = post.type === 'today_debate';
+                const accent = isToday ? '#fbbf24' : '#e63946';
+                const clubCfg = CLUB_CFG[post.club] || { bg: '#141420', color: '#9ca3af' };
                 return (
-                  <button key={t} onClick={() => toggleTier(t)}
-                    className="flex-1 py-1.5 rounded-lg text-xs font-bold"
+                  <button key={post.id} onClick={() => onSelectPost(post)}
+                    className="w-full text-left px-3 py-2.5 rounded-xl"
                     style={{
-                      background: active ? '#2a1f00' : '#111118',
-                      color: active ? '#f4a100' : '#4a4a6a',
-                      border: `1px solid ${active ? '#f4a10040' : '#1e1e2a'}`,
+                      background: isSelected ? '#111120' : 'transparent',
+                      border: `1px solid ${isSelected ? '#2a2a4a' : 'transparent'}`,
                     }}>
-                    T{t}
+                    <div className="flex items-center gap-1.5 mb-1">
+                      <span className="text-xs font-bold shrink-0" style={{ color: '#3a3a5a', minWidth: '12px' }}>{i + 1}</span>
+                      <span className="text-xs px-1.5 py-0.5 rounded font-bold shrink-0"
+                        style={{ background: clubCfg.bg, color: clubCfg.color }}>
+                        {post.club}
+                      </span>
+                      <span className="text-xs px-1.5 py-0.5 rounded-full font-bold ml-auto shrink-0"
+                        style={{ color: accent, background: `${accent}15` }}>
+                        {post.badge}
+                      </span>
+                    </div>
+                    <p className="text-xs leading-snug" style={{ color: isSelected ? '#d0d4f0' : '#8b8fa8' }}>
+                      {post.title.replace('\n', ' ')}
+                    </p>
+                    {post.voteFor != null && (
+                      <div className="flex h-1 rounded-full overflow-hidden mt-1.5" style={{ background: '#1a1a2a' }}>
+                        <div style={{ width: `${post.voteFor}%`, background: '#2563eb88' }} />
+                        <div style={{ width: `${post.voteAgainst}%`, background: '#dc262688' }} />
+                      </div>
+                    )}
                   </button>
                 );
               })}
             </div>
           </div>
-
-          {/* 진행 단계 */}
-          <div>
-            <div className="text-xs font-bold mb-2.5" style={{ color: '#4a4a6a', letterSpacing: '0.06em' }}>
-              진행 단계
-            </div>
-            <div className="space-y-0.5">
-              {ALL_STATUSES.map(status => {
-                const cfg = STATUS_CFG[status] || STATUS_CFG.Rumour;
-                const active = filters.statuses.includes(status);
-                return (
-                  <button key={status} onClick={() => toggleStatus(status)}
-                    className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left"
-                    style={{
-                      background: active ? cfg.bg : 'transparent',
-                      border: `1px solid ${active ? cfg.color + '30' : 'transparent'}`,
-                    }}>
-                    <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: cfg.dot }} />
-                    <span className="text-xs" style={{ color: active ? cfg.color : '#6b6f88' }}>
-                      {status.toUpperCase()}
-                    </span>
-                    {active && <span className="ml-auto text-xs" style={{ color: cfg.color }}>✓</span>}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </div>
+        </>
       )}
 
-      {/* Collapsed: filter icons */}
       {collapsed && (
         <div className="flex-1 flex flex-col items-center gap-4 py-4">
-          {filters.clubs.length > 0 && (
+          {clubFilter.length > 0 && (
             <span className="w-2 h-2 rounded-full" style={{ background: '#3b82f6' }} />
           )}
-          {filters.statuses.length > 0 && (
-            <span className="w-2 h-2 rounded-full" style={{ background: '#fbbf24' }} />
-          )}
-        </div>
-      )}
-
-      {/* Bottom: reset */}
-      {!collapsed && (
-        <div className="px-4 py-4 shrink-0" style={{ borderTop: '1px solid #141420' }}>
-          <button
-            onClick={() => onFiltersChange({ clubs: [], tiers: [], statuses: [] })}
-            className="w-full py-2 rounded-lg text-xs font-semibold"
-            style={{ background: '#111118', color: '#4a4a6a', border: '1px solid #1e1e2a' }}>
-            필터 초기화
-          </button>
         </div>
       )}
     </div>
@@ -234,7 +201,7 @@ function Sidebar({ selectedTeam, filters, onFiltersChange, collapsed }) {
 
 /* ─── Desktop feed card (가로형) ─── */
 function DesktopFeedCard({ post, selected, onSelect, vote, fillHeight = false }) {
-  const isDebate = post.type === 'debate' || post.type === 'today_debate' || post.type === 'hot_debate';
+  const isDebate = isDebateType(post);
   const isToday = post.type === 'today_debate';
   const accent = isToday ? '#fbbf24' : '#e63946';
   const statusCfg = STATUS_CFG[post.status] || STATUS_CFG.Rumour;
@@ -254,13 +221,11 @@ function DesktopFeedCard({ post, selected, onSelect, vote, fillHeight = false })
         minHeight: '220px',
         ...(fillHeight && { height: '100%', display: 'flex', flexDirection: 'column' }),
       }}>
-      {/* Debate top line */}
       {isDebate && (
         <div className="h-[2px]"
           style={{ background: `linear-gradient(90deg, transparent, ${accent}90, transparent)` }} />
       )}
 
-      {/* 가로 그리드: 텍스트 | 이미지 */}
       <div style={{
         display: 'grid',
         gridTemplateColumns: '1fr 220px',
@@ -269,7 +234,6 @@ function DesktopFeedCard({ post, selected, onSelect, vote, fillHeight = false })
         {/* 텍스트 영역 */}
         <div className="p-5 flex flex-col justify-between min-w-0">
           <div>
-            {/* Badges */}
             <div className="flex items-center gap-2 mb-3 flex-wrap">
               {isDebate && (
                 <span className="flex items-center gap-1.5 text-xs font-bold px-2 py-1 rounded-full"
@@ -293,13 +257,11 @@ function DesktopFeedCard({ post, selected, onSelect, vote, fillHeight = false })
               )}
             </div>
 
-            {/* Title */}
             <h3 className="font-black text-white leading-tight mb-2 whitespace-pre-line"
               style={{ fontSize: '18px', letterSpacing: '-0.3px' }}>
               {post.title}
             </h3>
 
-            {/* Summary */}
             <p className="text-sm leading-relaxed mb-3"
               style={{
                 color: 'rgba(255,255,255,0.45)',
@@ -312,7 +274,6 @@ function DesktopFeedCard({ post, selected, onSelect, vote, fillHeight = false })
             </p>
           </div>
 
-          {/* Tweet source */}
           {post.tweet && (
             <div className="flex items-center gap-2">
               <div className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
@@ -341,7 +302,6 @@ function DesktopFeedCard({ post, selected, onSelect, vote, fillHeight = false })
               <span style={{ fontSize: '32px', opacity: 0.12 }}>⚽</span>
             </div>
           )}
-          {/* 이미지 좌측 페이드 */}
           <div className="absolute inset-0"
             style={{ background: 'linear-gradient(to right, #0a0a14 0%, transparent 30%)' }} />
         </div>
@@ -372,18 +332,105 @@ function DesktopFeedCard({ post, selected, onSelect, vote, fillHeight = false })
         <span className="text-xs" style={{ color: '#2a2a4a' }}>♡ {fmt(post.reactions)}</span>
         <span className="text-xs" style={{ color: '#2a2a4a' }}>💬 {fmt(post.comments)}</span>
         <span className="text-xs" style={{ color: '#2a2a4a' }}>🔖 {fmt(post.bookmarks)}</span>
-        {selected && (
-          <span className="ml-auto text-xs font-semibold"
-            style={{ color: isDebate ? accent : '#3b82f6' }}>
-            토론 중 →
-          </span>
-        )}
       </div>
     </div>
   );
 }
 
-/* ─── Feed column ─── */
+/* ─── PeekRow — 단일 라인 블러 미리보기 ─── */
+function PeekRow({ post, onClick, direction }) {
+  const isDebate = isDebateType(post);
+  const isToday = post?.type === 'today_debate';
+  const accent = isToday ? '#fbbf24' : '#e63946';
+  const statusCfg = STATUS_CFG[post?.status] || STATUS_CFG.Rumour;
+  const clubCfg = CLUB_CFG[post?.club] || { bg: '#141420', color: '#9ca3af' };
+
+  return (
+    <div onClick={onClick}
+      style={{
+        height: '44px',
+        flexShrink: 0,
+        cursor: 'pointer',
+        position: 'relative',
+        overflow: 'hidden',
+        opacity: 0.45,
+        filter: 'blur(0.8px)',
+      }}>
+      <div className="flex items-center gap-2 px-4 h-full"
+        style={{ background: '#0a0a14', borderRadius: '12px' }}>
+        {isDebate ? (
+          <span className="text-xs font-bold px-2 py-0.5 rounded-full shrink-0"
+            style={{ color: accent, background: `${accent}18` }}>
+            {post.badge}
+          </span>
+        ) : (
+          post?.status && (
+            <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: statusCfg.dot }} />
+          )
+        )}
+        {post?.club && (
+          <span className="text-xs font-bold px-1.5 py-0.5 rounded shrink-0"
+            style={{ background: clubCfg.bg, color: clubCfg.color }}>
+            {post.club}
+          </span>
+        )}
+        <span className="text-sm font-semibold truncate flex-1" style={{ color: '#d0d4f0' }}>
+          {post?.title?.replace('\n', ' ')}
+        </span>
+        {post?.tweet?.timeAgo && (
+          <span className="text-xs shrink-0" style={{ color: '#3a3a5a' }}>{post.tweet.timeAgo}</span>
+        )}
+        <span className="text-xs shrink-0" style={{ color: '#4a4a6a' }}>
+          {direction === 'prev' ? '↑' : '↓'}
+        </span>
+      </div>
+      <div className="absolute inset-x-0"
+        style={{
+          [direction === 'prev' ? 'top' : 'bottom']: 0,
+          height: '100%',
+          background: direction === 'prev'
+            ? 'linear-gradient(to bottom, #050508 0%, transparent 100%)'
+            : 'linear-gradient(to top, #050508 0%, transparent 100%)',
+          pointerEvents: 'none',
+        }} />
+    </div>
+  );
+}
+
+/* ─── DotIndicator ─── */
+function DotIndicator({ total, selectedIdx, onSelect }) {
+  return (
+    <div style={{
+      position: 'absolute',
+      right: '8px',
+      top: '50%',
+      transform: 'translateY(-50%)',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '4px',
+      zIndex: 10,
+    }}>
+      {Array.from({ length: total }).map((_, i) => (
+        <button
+          key={i}
+          onClick={() => onSelect(i)}
+          style={{
+            width: '4px',
+            height: i === selectedIdx ? '18px' : '4px',
+            borderRadius: '2px',
+            background: i === selectedIdx ? '#fff' : '#2a2a4a',
+            border: 'none',
+            padding: 0,
+            cursor: 'pointer',
+            transition: 'all 0.2s ease',
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+/* ─── CardCarousel ─── */
 const TICKER_ITEMS = [
   '● LIVE  진짜 보내면 안되지', '@jenna_94  드디어 ㅠㅠ 너무 좋다',
   '@manu_fan  캐릭은 진짜 레전드임', '@spurs_kr  손흥민 제발 남아줘',
@@ -391,9 +438,7 @@ const TICKER_ITEMS = [
   '@lfc_kr  살라 계약 드디어', '@city_kr  홀란드 빨리 낫길',
 ];
 
-const PEEK = 150; // px — prev/next 카드가 보이는 높이
-
-function FeedColumn({ posts, selectedPost, onSelect, votes }) {
+function CardCarousel({ posts, selectedPost, onSelect, votes }) {
   const text = TICKER_ITEMS.map((t, i) => (i > 0 ? `  —  ${t}` : t)).join('');
   const doubled = text + '    —    ' + text;
 
@@ -401,15 +446,28 @@ function FeedColumn({ posts, selectedPost, onSelect, votes }) {
   const prevPost = selectedIdx > 0 ? posts[selectedIdx - 1] : null;
   const nextPost = selectedIdx < posts.length - 1 ? posts[selectedIdx + 1] : null;
 
-  return (
-    <div className="flex-1 flex flex-col min-w-0"
-      style={{ height: '100vh', overflow: 'hidden' }}>
+  useEffect(() => {
+    const handleKey = (e) => {
+      if (e.key === 'ArrowUp' && prevPost) {
+        e.preventDefault();
+        onSelect(prevPost);
+      } else if (e.key === 'ArrowDown' && nextPost) {
+        e.preventDefault();
+        onSelect(nextPost);
+      }
+    };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, [prevPost, nextPost, onSelect]);
 
+  return (
+    <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="shrink-0 px-8 py-4 flex items-center gap-3"
-        style={{ borderBottom: '1px solid #141420', background: '#07070f', zIndex: 10 }}>
-        <span className="font-black text-white" style={{ fontSize: '18px' }}>피드</span>
+      <div className="shrink-0 px-8 py-3 flex items-center gap-3"
+        style={{ borderBottom: '1px solid #141420', background: '#07070f' }}>
+        <span className="font-black text-white" style={{ fontSize: '16px' }}>피드</span>
         <span className="text-sm" style={{ color: '#3a3a5a' }}>{posts.length}개 이슈</span>
+        <span className="ml-auto text-xs" style={{ color: '#2a2a4a' }}>↑↓ 키로 이동</span>
       </div>
 
       {/* Ticker */}
@@ -418,7 +476,7 @@ function FeedColumn({ posts, selectedPost, onSelect, votes }) {
         <div className="live-ticker text-xs" style={{ color: '#4a4a6a' }}>{doubled}</div>
       </div>
 
-      {/* 3-슬롯 카드 뷰포트 */}
+      {/* Card slots */}
       {posts.length === 0 ? (
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center" style={{ color: '#3a3a5a' }}>
@@ -427,36 +485,11 @@ function FeedColumn({ posts, selectedPost, onSelect, votes }) {
           </div>
         </div>
       ) : (
-        <div className="flex-1 overflow-hidden" style={{ padding: '12px 32px 16px' }}>
-          <div className="mx-auto h-full flex flex-col" style={{ maxWidth: '680px', gap: '8px' }}>
-
-            {/* Prev peek — 카드 하단부만 노출 */}
+        <div className="flex-1 overflow-hidden relative" style={{ padding: '8px 32px 8px' }}>
+          <div className="h-full flex flex-col mx-auto" style={{ maxWidth: '680px', gap: '6px' }}>
             {prevPost && (
-              <div
-                onClick={() => onSelect(prevPost)}
-                style={{
-                  flexShrink: 0,
-                  height: PEEK,
-                  overflow: 'hidden',
-                  borderRadius: '16px',
-                  cursor: 'pointer',
-                  position: 'relative',
-                }}>
-                {/* 카드 상단부 노출 (배지+제목 영역) */}
-                <div style={{
-                  opacity: 0.45,
-                  filter: 'blur(1.5px)',
-                  pointerEvents: 'none',
-                }}>
-                  <DesktopFeedCard post={prevPost} selected={false} onSelect={() => {}} vote={votes[prevPost.id]} />
-                </div>
-                {/* 아래쪽 페이드 */}
-                <div className="absolute inset-x-0 bottom-0"
-                  style={{ height: '70px', background: 'linear-gradient(to top, #050508, transparent)', pointerEvents: 'none' }} />
-              </div>
+              <PeekRow post={prevPost} onClick={() => onSelect(prevPost)} direction="prev" />
             )}
-
-            {/* 선택된 카드 — flex:1로 남은 공간 채움 */}
             <div style={{ flex: 1, minHeight: 0 }}>
               {selectedPost && (
                 <DesktopFeedCard
@@ -468,33 +501,17 @@ function FeedColumn({ posts, selectedPost, onSelect, votes }) {
                 />
               )}
             </div>
-
-            {/* Next peek — 카드 상단부만 노출 */}
             {nextPost && (
-              <div
-                onClick={() => onSelect(nextPost)}
-                style={{
-                  flexShrink: 0,
-                  height: PEEK,
-                  overflow: 'hidden',
-                  borderRadius: '16px',
-                  cursor: 'pointer',
-                  position: 'relative',
-                }}>
-                <div style={{
-                  opacity: 0.45,
-                  filter: 'blur(1.5px)',
-                  pointerEvents: 'none',
-                }}>
-                  <DesktopFeedCard post={nextPost} selected={false} onSelect={() => {}} vote={votes[nextPost.id]} />
-                </div>
-                {/* 아래쪽 페이드 */}
-                <div className="absolute inset-x-0 bottom-0"
-                  style={{ height: '60px', background: 'linear-gradient(to top, #050508, transparent)', pointerEvents: 'none' }} />
-              </div>
+              <PeekRow post={nextPost} onClick={() => onSelect(nextPost)} direction="next" />
             )}
-
           </div>
+          {posts.length > 1 && (
+            <DotIndicator
+              total={Math.min(posts.length, 12)}
+              selectedIdx={selectedIdx}
+              onSelect={(i) => onSelect(posts[i])}
+            />
+          )}
         </div>
       )}
     </div>
@@ -534,46 +551,129 @@ function CommentCard({ c }) {
   );
 }
 
-/* ─── Discussion panel ─── */
-function DiscussionPanel({ post, vote, onVote }) {
+/* ─── CommentsSection (센터 하단) ─── */
+function CommentsSection({ post }) {
   const [tab, setTab] = useState('best');
-  const isDebate = post && (post.type === 'debate' || post.type === 'today_debate' || post.type === 'hot_debate');
-  const isToday = post?.type === 'today_debate';
-  const accent = isToday ? '#fbbf24' : '#e63946';
-  const statusColor = post ? (STATUS_CFG[post.status]?.color || '#9ca3af') : '#9ca3af';
-  const scrollRef = useRef(null);
-  const tabsRef = useRef(null);
+  const isDebate = isDebateType(post);
 
-  // Reset tab when post changes
   useEffect(() => { setTab('best'); }, [post?.id]);
 
-  // 투표 직후 탭/댓글 영역으로 자동 스크롤
-  useEffect(() => {
-    if (vote && tabsRef.current && scrollRef.current) {
-      tabsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  }, [vote]);
-
-  if (!post) {
-    return (
-      <div className="shrink-0 flex items-center justify-center"
-        style={{ width: '360px', borderLeft: '1px solid #141420', background: '#07070f' }}>
-        <div className="text-center" style={{ color: '#2a2a4a' }}>
-          <div className="text-4xl mb-3">💬</div>
-          <div className="text-sm">카드를 클릭하면<br />토론이 여기에 표시됩니다</div>
-        </div>
-      </div>
-    );
-  }
+  if (!post) return (
+    <div className="h-full flex items-center justify-center" style={{ color: '#3a3a5a' }}>
+      <div className="text-sm">카드를 선택하세요</div>
+    </div>
+  );
 
   const tabs = isDebate ? ['best', 'live', 'args'] : ['best', 'live'];
 
   return (
-    <div className="shrink-0 flex flex-col"
-      style={{ width: '360px', borderLeft: '1px solid #141420', position: 'sticky', top: 0, height: '100vh', background: '#07070f' }}>
+    <div className="flex flex-col h-full" style={{ background: '#07070f' }}>
+      {/* Header */}
+      <div className="shrink-0 px-6 py-3 flex items-center gap-3"
+        style={{ borderBottom: '1px solid #141420' }}>
+        <span className="text-sm font-black text-white truncate flex-1">
+          {post.title.replace('\n', ' ')}
+        </span>
+        <span className="text-xs shrink-0" style={{ color: '#3a3a5a' }}>
+          💬 {fmt(post.comments)}
+        </span>
+      </div>
+
+      {/* Tabs */}
+      <div className="flex gap-5 px-6 shrink-0"
+        style={{ borderBottom: '1px solid #141420' }}>
+        {tabs.map(t => (
+          <button key={t} onClick={() => setTab(t)}
+            className="text-sm font-semibold pb-2.5 pt-2"
+            style={{
+              color: tab === t ? '#fff' : '#4a4a6a',
+              borderBottom: tab === t ? '2px solid #fff' : '2px solid transparent',
+            }}>
+            {t === 'best' ? '베스트' : t === 'live' ? (
+              <span className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#e63946' }} />
+                실시간
+              </span>
+            ) : (
+              <span className="flex items-center gap-1.5">
+                주요의견
+                <span className="text-xs font-bold px-1 py-0.5 rounded"
+                  style={{ color: '#818cf8', background: '#1e1b4b', fontSize: '9px' }}>AI</span>
+              </span>
+            )}
+          </button>
+        ))}
+      </div>
+
+      {/* List */}
+      <div className="flex-1 overflow-y-auto pt-2" style={{ scrollbarWidth: 'none' }}>
+        {tab === 'args' && post.argumentPoints ? (
+          <div className="space-y-1.5 px-4 py-2">
+            {(post.argumentPoints || []).map(arg => {
+              const isFor = arg.stance === 'for';
+              const isNeutral = arg.stance === 'neutral';
+              const dotColor = isNeutral ? '#9ca3af' : isFor ? '#3b82f6' : '#e63946';
+              return (
+                <div key={arg.id} className="rounded-2xl overflow-hidden"
+                  style={{ background: '#111118', border: '1px solid #1a1a2a' }}>
+                  <div className="flex items-center gap-3 px-4 py-3">
+                    <span className="w-2 h-2 rounded-full shrink-0" style={{ background: dotColor }} />
+                    <span className="flex-1 text-sm font-medium leading-snug" style={{ color: '#d0d4f0' }}>
+                      {arg.text}
+                    </span>
+                    <span className="text-xs px-2 py-0.5 rounded-full shrink-0"
+                      style={{
+                        color: dotColor,
+                        background: isNeutral ? '#1a1a2a' : isFor ? '#1e3a5f' : '#3b0a0a',
+                      }}>
+                      💬 {arg.comments}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="pb-2">
+            {(post.comments_data || []).map(c => <CommentCard key={c.id} c={c} />)}
+          </div>
+        )}
+      </div>
+
+      {/* Input */}
+      <div className="px-4 py-3 shrink-0" style={{ borderTop: '1px solid #141420' }}>
+        <div className="flex items-center gap-3 px-4 py-2.5 rounded-full"
+          style={{ background: '#141420', border: '1px solid #1e1e2a' }}>
+          <input
+            className="flex-1 text-sm bg-transparent outline-none"
+            style={{ color: '#d0d4f0' }}
+            placeholder="팬 반응 남기기..."
+          />
+          <button className="text-sm font-semibold" style={{ color: '#3b82f6' }}>게시</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── VotePanel (우측 컬럼) ─── */
+function VotePanel({ post, vote, onVote }) {
+  const isDebate = isDebateType(post);
+  const isToday = post?.type === 'today_debate';
+  const accent = isToday ? '#fbbf24' : '#e63946';
+  const statusCfg = STATUS_CFG[post?.status] || STATUS_CFG.Rumour;
+
+  if (!post) return (
+    <div className="flex-1 flex items-center justify-center" style={{ color: '#3a3a5a' }}>
+      <div className="text-sm text-center">카드를 클릭하면<br />여기에 표시됩니다</div>
+    </div>
+  );
+
+  return (
+    <div className="flex flex-col h-full" style={{ background: '#07070f' }}>
       {/* Header */}
       <div className="flex items-center gap-2 px-4 py-3.5 shrink-0"
-        style={{ borderBottom: '1px solid #141420', minHeight: '64px' }}>
+        style={{ borderBottom: '1px solid #141420', minHeight: '56px' }}>
         {post.club && (
           <span className="text-xs font-bold px-2.5 py-1 rounded-lg"
             style={{ background: '#1a1a2a', color: '#d0d4f0' }}>
@@ -582,19 +682,17 @@ function DiscussionPanel({ post, vote, onVote }) {
         )}
         {post.status && (
           <span className="flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-lg"
-            style={{ background: '#1a1a2a', color: statusColor }}>
-            <span className="w-1.5 h-1.5 rounded-full" style={{ background: statusColor }} />
+            style={{ background: '#1a1a2a', color: statusCfg.color }}>
+            <span className="w-1.5 h-1.5 rounded-full" style={{ background: statusCfg.color }} />
             {post.status.toUpperCase()}
           </span>
         )}
       </div>
 
-      {/* Scrollable content */}
-      <div ref={scrollRef} className="flex-1 overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
-
+      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4" style={{ scrollbarWidth: 'none' }}>
         {isDebate ? (
-          <div className="px-4 pt-4 pb-4 space-y-4">
-            {/* Briefing */}
+          <>
+            {/* Briefing (debate context) */}
             {post.briefing && (
               <div className="rounded-2xl px-4 py-3"
                 style={{ background: '#0e0e1a', border: '1px solid #1e1e2a' }}>
@@ -604,13 +702,9 @@ function DiscussionPanel({ post, vote, onVote }) {
                       style={{ background: '#1e1e2e', color: '#f4a100' }}>
                       {post.tweet.initials}
                     </div>
-                    <span className="text-xs font-semibold" style={{ color: '#8b8fa8' }}>
-                      {post.tweet.author}
-                    </span>
+                    <span className="text-xs font-semibold" style={{ color: '#8b8fa8' }}>{post.tweet.author}</span>
                     <span className="text-xs font-bold px-1.5 py-0.5 rounded"
-                      style={{ background: '#2a1f00', color: '#f4a100' }}>
-                      T{post.tweet.tier}
-                    </span>
+                      style={{ background: '#2a1f00', color: '#f4a100' }}>T{post.tweet.tier}</span>
                     <span className="text-xs ml-auto" style={{ color: '#3a3a5a' }}>{post.tweet.timeAgo}</span>
                   </div>
                 )}
@@ -618,7 +712,7 @@ function DiscussionPanel({ post, vote, onVote }) {
               </div>
             )}
 
-            {/* Debate label */}
+            {/* Debate label + question */}
             <div className="flex items-center gap-1.5">
               <span style={{ color: '#fbbf24', fontSize: '13px' }}>⚡</span>
               <span className="text-xs font-semibold" style={{ color: '#6b6f88' }}>이 소식에서 논쟁 생성됨</span>
@@ -627,14 +721,12 @@ function DiscussionPanel({ post, vote, onVote }) {
                 {post.badge}
               </span>
             </div>
-
-            {/* Debate question */}
             <h2 className="text-xl font-black text-white leading-tight">{post.debateQuestion}</h2>
             {vote && post.aiNarrative && (
               <p className="text-sm leading-relaxed" style={{ color: '#8b8fa8' }}>{post.aiNarrative}</p>
             )}
 
-            {/* Vote */}
+            {/* Vote area */}
             {vote ? (
               <>
                 <div className="rounded-2xl p-4" style={{ background: '#111118', border: '1px solid #1e1e2a' }}>
@@ -739,15 +831,15 @@ function DiscussionPanel({ post, vote, onVote }) {
                 </div>
               </>
             )}
-          </div>
+          </>
         ) : (
-          /* General post */
-          <div className="px-4 pt-4 pb-4">
-            <h3 className="text-lg font-black text-white leading-snug mb-3">
+          /* General post: briefing + stats */
+          <>
+            <h3 className="text-lg font-black text-white leading-snug">
               {post.title.replace('\n', ' ')}
             </h3>
             {post.briefing && (
-              <div className="rounded-2xl px-4 py-3 mb-4"
+              <div className="rounded-2xl px-4 py-3"
                 style={{ background: '#0e0e1a', border: '1px solid #1e1e2a' }}>
                 {post.tweet && (
                   <div className="flex items-center gap-2 mb-2">
@@ -764,89 +856,22 @@ function DiscussionPanel({ post, vote, onVote }) {
                 <p className="text-sm leading-relaxed" style={{ color: '#c8ccdf' }}>{post.briefing}</p>
               </div>
             )}
-          </div>
-        )}
-
-        {/* Tabs */}
-        <div ref={tabsRef} className="flex gap-5 px-4 shrink-0" style={{ borderBottom: '1px solid #141420', borderTop: '1px solid #141420' }}>
-          {tabs.map(t => (
-            <button key={t} onClick={() => setTab(t)}
-              className="text-sm font-semibold pb-2.5 pt-2"
-              style={{
-                color: tab === t ? '#fff' : '#4a4a6a',
-                borderBottom: tab === t ? '2px solid #fff' : '2px solid transparent',
-              }}>
-              {t === 'best' ? '베스트' : t === 'live' ? (
-                <span className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#e63946' }} />
-                  실시간
-                </span>
-              ) : (
-                <span className="flex items-center gap-1.5">
-                  주요의견
-                  <span className="text-xs font-bold px-1 py-0.5 rounded"
-                    style={{ color: '#818cf8', background: '#1e1b4b', fontSize: '9px' }}>AI</span>
-                </span>
-              )}
-            </button>
-          ))}
-        </div>
-
-        {/* Comments */}
-        <div className="pt-2 pb-20">
-          {tab === 'args' && post.argumentPoints ? (
-            <div className="pt-2 pb-6 space-y-2">
-              {(post.argumentPoints || []).map(arg => {
-                const isFor = arg.stance === 'for';
-                const isNeutral = arg.stance === 'neutral';
-                const dotColor = isNeutral ? '#9ca3af' : isFor ? '#3b82f6' : '#e63946';
-                return (
-                  <div key={arg.id} className="mx-4 rounded-2xl overflow-hidden"
-                    style={{ background: '#111118', border: '1px solid #1a1a2a' }}>
-                    <div className="flex items-center gap-3 px-4 py-3.5">
-                      <span className="w-2 h-2 rounded-full shrink-0" style={{ background: dotColor }} />
-                      <span className="flex-1 text-sm font-medium leading-snug" style={{ color: '#d0d4f0' }}>
-                        {arg.text}
-                      </span>
-                      <span className="text-xs px-2 py-0.5 rounded-full shrink-0"
-                        style={{
-                          color: dotColor,
-                          background: isNeutral ? '#1a1a2a' : isFor ? '#1e3a5f' : '#3b0a0a',
-                        }}>
-                        💬 {arg.comments}
-                      </span>
-                    </div>
-                  </div>
-                );
-              })}
+            <div className="grid grid-cols-3 gap-3">
+              <div className="rounded-xl p-3 text-center" style={{ background: '#111118', border: '1px solid #1a1a2a' }}>
+                <div className="text-lg font-black text-white">{fmt(post.reactions)}</div>
+                <div className="text-xs mt-0.5" style={{ color: '#4a4a6a' }}>반응</div>
+              </div>
+              <div className="rounded-xl p-3 text-center" style={{ background: '#111118', border: '1px solid #1a1a2a' }}>
+                <div className="text-lg font-black text-white">{fmt(post.comments)}</div>
+                <div className="text-xs mt-0.5" style={{ color: '#4a4a6a' }}>댓글</div>
+              </div>
+              <div className="rounded-xl p-3 text-center" style={{ background: '#111118', border: '1px solid #1a1a2a' }}>
+                <div className="text-lg font-black text-white">{fmt(post.bookmarks)}</div>
+                <div className="text-xs mt-0.5" style={{ color: '#4a4a6a' }}>저장</div>
+              </div>
             </div>
-          ) : (
-            (post.comments_data || []).map(c => <CommentCard key={c.id} c={c} />)
-          )}
-        </div>
-      </div>
-
-      {/* Comment input */}
-      <div className="px-4 py-3 shrink-0 absolute bottom-0 left-0 right-0"
-        style={{ borderTop: '1px solid #141420', background: '#07070f' }}>
-        <div className="flex items-center gap-3 px-4 py-2.5 rounded-full"
-          style={{
-            background: '#141420',
-            border: '1px solid #1e1e2a',
-            opacity: isDebate && !vote ? 0.5 : 1,
-          }}>
-          <input
-            className="flex-1 text-sm bg-transparent outline-none"
-            style={{ color: '#d0d4f0' }}
-            placeholder={isDebate && !vote ? '투표 후 댓글을 남길 수 있어요' : '팬 반응 남기기...'}
-            disabled={isDebate && !vote}
-          />
-          <button className="text-sm font-semibold"
-            style={{ color: isDebate && !vote ? '#3a3a5a' : '#3b82f6' }}
-            disabled={isDebate && !vote}>
-            게시
-          </button>
-        </div>
+          </>
+        )}
       </div>
     </div>
   );
@@ -860,9 +885,19 @@ export default function DesktopLayout({ selectedTeam }) {
   const defaultPost = POSTS.find(p => p.type === 'hot_debate') || POSTS[0];
   const [selectedPost, setSelectedPost] = useState(defaultPost);
   const [votes, setVotes] = useState({});
-  const [filters, setFilters] = useState({ clubs: [], tiers: [], statuses: [] });
+  const [clubFilter, setClubFilter] = useState([]);
 
-  const filteredPosts = useMemo(() => applyFilters(POSTS, filters), [filters]);
+  const filteredPosts = useMemo(() => {
+    if (clubFilter.length === 0) return POSTS;
+    return POSTS.filter(p => clubFilter.includes(p.club));
+  }, [clubFilter]);
+
+  // 필터 변경 시 선택된 포스트가 없으면 첫 번째로
+  useEffect(() => {
+    if (filteredPosts.length > 0 && !filteredPosts.find(p => p.id === selectedPost?.id)) {
+      setSelectedPost(filteredPosts[0]);
+    }
+  }, [filteredPosts, selectedPost?.id]);
 
   const handleVote = (stance) => {
     if (!selectedPost) return;
@@ -870,24 +905,40 @@ export default function DesktopLayout({ selectedTeam }) {
   };
 
   return (
-    <div className="flex" style={{ minHeight: '100vh', background: '#050508' }}>
+    <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', background: '#050508' }}>
       <Sidebar
         selectedTeam={selectedTeam}
-        filters={filters}
-        onFiltersChange={setFilters}
+        clubFilter={clubFilter}
+        onClubFilterChange={setClubFilter}
+        posts={POSTS}
+        selectedPost={selectedPost}
+        onSelectPost={setSelectedPost}
         collapsed={sidebarCollapsed}
       />
-      <FeedColumn
-        posts={filteredPosts}
-        selectedPost={selectedPost}
-        onSelect={setSelectedPost}
-        votes={votes}
-      />
-      <DiscussionPanel
-        post={selectedPost}
-        vote={votes[selectedPost?.id]}
-        onVote={handleVote}
-      />
+
+      {/* 센터: 55% 카드 / 45% 댓글 */}
+      <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
+        <div style={{ flex: 55, minHeight: 0, overflow: 'hidden' }}>
+          <CardCarousel
+            posts={filteredPosts}
+            selectedPost={selectedPost}
+            onSelect={setSelectedPost}
+            votes={votes}
+          />
+        </div>
+        <div style={{ flex: 45, minHeight: 0, overflow: 'hidden', borderTop: '1px solid #141420' }}>
+          <CommentsSection post={selectedPost} />
+        </div>
+      </div>
+
+      {/* 우측: 투표 + AI 여론 */}
+      <div style={{ width: '340px', flexShrink: 0, display: 'flex', flexDirection: 'column', borderLeft: '1px solid #141420' }}>
+        <VotePanel
+          post={selectedPost}
+          vote={votes[selectedPost?.id]}
+          onVote={handleVote}
+        />
+      </div>
     </div>
   );
 }
