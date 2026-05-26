@@ -1,7 +1,18 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import StatusBar, { HomeIndicator } from './components/StatusBar'
 import EPLFeed from './epl/EPLFeed'
 import Onboarding from './epl/Onboarding'
+import DesktopLayout from './epl/DesktopLayout'
+
+function useWindowWidth() {
+  const [w, setW] = useState(window.innerWidth);
+  useEffect(() => {
+    const h = () => setW(window.innerWidth);
+    window.addEventListener('resize', h);
+    return () => window.removeEventListener('resize', h);
+  }, []);
+  return w;
+}
 
 export default function App() {
   const [onboarded, setOnboarded] = useState(false)
@@ -9,7 +20,14 @@ export default function App() {
     try { return JSON.parse(localStorage.getItem('reax_team')); }
     catch { return null; }
   })
+  const width = useWindowWidth();
 
+  // 768px 이상이면 데스크톱 레이아웃 (온보딩 스킵)
+  if (width >= 768) {
+    return <DesktopLayout selectedTeam={selectedTeam} />
+  }
+
+  // 모바일: 기존 phone frame + 온보딩 플로우
   return (
     <div className="min-h-screen w-full flex items-center justify-center py-6 px-4"
       style={{ background: '#070710' }}>
