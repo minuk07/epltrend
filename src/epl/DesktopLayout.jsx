@@ -232,7 +232,7 @@ function Sidebar({ selectedTeam, filters, onFiltersChange, collapsed }) {
   );
 }
 
-/* ─── Desktop feed card ─── */
+/* ─── Desktop feed card (가로형) ─── */
 function DesktopFeedCard({ post, selected, onSelect, vote }) {
   const isDebate = post.type === 'debate' || post.type === 'today_debate' || post.type === 'hot_debate';
   const isToday = post.type === 'today_debate';
@@ -251,6 +251,7 @@ function DesktopFeedCard({ post, selected, onSelect, vote }) {
         boxShadow: selected
           ? `0 0 0 3px ${isDebate ? accent : '#3b82f6'}15`
           : 'none',
+        minHeight: '180px',
       }}>
       {/* Debate top line */}
       {isDebate && (
@@ -258,101 +259,165 @@ function DesktopFeedCard({ post, selected, onSelect, vote }) {
           style={{ background: `linear-gradient(90deg, transparent, ${accent}90, transparent)` }} />
       )}
 
-      {/* Image */}
-      {post.imageUrl && (
-        <div className="h-32 relative overflow-hidden">
-          <img src={post.imageUrl} alt="" className="w-full h-full object-cover object-top" />
-          <div className="absolute inset-0"
-            style={{ background: 'linear-gradient(to bottom, transparent 20%, #0a0a14 90%)' }} />
-        </div>
-      )}
-
-      <div className="p-4">
-        {/* Badges */}
-        <div className="flex items-center gap-2 mb-2.5 flex-wrap">
-          {isDebate && (
-            <span className="flex items-center gap-1.5 text-xs font-bold px-2 py-1 rounded-full"
-              style={{ background: `${accent}18`, color: accent, border: `1px solid ${accent}35` }}>
-              <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: accent }} />
-              {post.badge}
-            </span>
-          )}
-          {post.status && (
-            <span className="flex items-center gap-1.5 text-xs font-bold px-2 py-1 rounded-lg"
-              style={{ background: statusCfg.bg, color: statusCfg.color }}>
-              <span className="w-1.5 h-1.5 rounded-full" style={{ background: statusCfg.dot }} />
-              {post.status.toUpperCase()}
-            </span>
-          )}
-          {post.club && (
-            <span className="text-xs font-bold px-2 py-1 rounded-lg"
-              style={{ background: clubCfg.bg, color: clubCfg.color }}>
-              {post.club}
-            </span>
-          )}
-        </div>
-
-        {/* Title */}
-        <h3 className="font-black text-white leading-tight mb-1.5 whitespace-pre-line"
-          style={{ fontSize: '17px', letterSpacing: '-0.3px' }}>
-          {post.title}
-        </h3>
-
-        {/* Summary */}
-        <p className="text-xs leading-relaxed mb-3" style={{ color: 'rgba(255,255,255,0.45)' }}>
-          {post.summary}
-        </p>
-
-        {/* Tweet source */}
-        {post.tweet && (
-          <div className="flex items-center gap-2 mb-3">
-            <div className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
-              style={{ background: '#1e1e2e', color: '#f4a100' }}>
-              {post.tweet.initials}
+      {/* 가로 그리드: 텍스트 | 이미지 */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 200px' }}>
+        {/* 텍스트 영역 */}
+        <div className="p-4 flex flex-col justify-between min-w-0">
+          <div>
+            {/* Badges */}
+            <div className="flex items-center gap-2 mb-2.5 flex-wrap">
+              {isDebate && (
+                <span className="flex items-center gap-1.5 text-xs font-bold px-2 py-1 rounded-full"
+                  style={{ background: `${accent}18`, color: accent, border: `1px solid ${accent}35` }}>
+                  <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: accent }} />
+                  {post.badge}
+                </span>
+              )}
+              {post.status && (
+                <span className="flex items-center gap-1.5 text-xs font-bold px-2 py-1 rounded-lg"
+                  style={{ background: statusCfg.bg, color: statusCfg.color }}>
+                  <span className="w-1.5 h-1.5 rounded-full" style={{ background: statusCfg.dot }} />
+                  {post.status.toUpperCase()}
+                </span>
+              )}
+              {post.club && (
+                <span className="text-xs font-bold px-2 py-1 rounded-lg"
+                  style={{ background: clubCfg.bg, color: clubCfg.color }}>
+                  {post.club}
+                </span>
+              )}
             </div>
-            <span className="text-xs" style={{ color: '#6b6f88' }}>{post.tweet.author}</span>
-            <span className="text-xs font-bold px-1.5 py-0.5 rounded"
-              style={{ background: '#2a1f00', color: '#f4a100' }}>
-              T{post.tweet.tier}
-            </span>
-            <span className="text-xs ml-auto" style={{ color: '#3a3a5a' }}>{post.tweet.timeAgo}</span>
-          </div>
-        )}
 
-        {/* Vote bar (debate only) */}
+            {/* Title */}
+            <h3 className="font-black text-white leading-tight mb-1.5 whitespace-pre-line"
+              style={{ fontSize: '17px', letterSpacing: '-0.3px' }}>
+              {post.title}
+            </h3>
+
+            {/* Summary — 최대 3줄 */}
+            <p className="text-xs leading-relaxed mb-3"
+              style={{
+                color: 'rgba(255,255,255,0.45)',
+                display: '-webkit-box',
+                WebkitLineClamp: 3,
+                WebkitBoxOrient: 'vertical',
+                overflow: 'hidden',
+              }}>
+              {post.summary}
+            </p>
+          </div>
+
+          {/* Tweet source */}
+          {post.tweet && (
+            <div className="flex items-center gap-2">
+              <div className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
+                style={{ background: '#1e1e2e', color: '#f4a100' }}>
+                {post.tweet.initials}
+              </div>
+              <span className="text-xs truncate" style={{ color: '#6b6f88' }}>{post.tweet.author}</span>
+              <span className="text-xs font-bold px-1.5 py-0.5 rounded shrink-0"
+                style={{ background: '#2a1f00', color: '#f4a100' }}>
+                T{post.tweet.tier}
+              </span>
+              <span className="text-xs ml-auto shrink-0" style={{ color: '#3a3a5a' }}>{post.tweet.timeAgo}</span>
+            </div>
+          )}
+        </div>
+
+        {/* 이미지 영역 */}
+        <div className="relative overflow-hidden" style={{ minHeight: '160px' }}>
+          {post.imageUrl ? (
+            <img src={post.imageUrl} alt=""
+              className="absolute inset-0 w-full h-full"
+              style={{ objectFit: 'cover', objectPosition: 'center top' }} />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center"
+              style={{ background: '#111118' }}>
+              <span style={{ fontSize: '28px', opacity: 0.15 }}>⚽</span>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* 하단 푸터 */}
+      <div className="px-4 py-2.5 flex items-center gap-4"
+        style={{ borderTop: '1px solid #141420' }}>
+        {/* 투표 바 (debate만) */}
         {isDebate && (
-          <div className="mb-3">
+          <div style={{ width: '140px', flexShrink: 0 }}>
             {vote ? (
               <>
-                <div className="flex h-1.5 rounded-full overflow-hidden mb-1" style={{ background: '#1a1a2a' }}>
+                <div className="flex h-1 rounded-full overflow-hidden mb-0.5" style={{ background: '#1a1a2a' }}>
                   <div style={{ width: `${post.voteFor}%`, background: 'linear-gradient(90deg,#2563eb,#3b82f6)' }} />
                   <div style={{ width: `${post.voteAgainst}%`, background: 'linear-gradient(90deg,#dc2626,#e63946)' }} />
                 </div>
-                <div className="flex justify-between text-xs">
-                  <span style={{ color: '#3b82f6' }}>{post.voteForLabel} {post.voteFor}%</span>
-                  <span style={{ color: '#e63946' }}>{post.voteAgainst}% {post.voteAgainstLabel}</span>
+                <div className="flex justify-between" style={{ fontSize: '10px' }}>
+                  <span style={{ color: '#3b82f6' }}>{post.voteFor}%</span>
+                  <span style={{ color: '#e63946' }}>{post.voteAgainst}%</span>
                 </div>
               </>
             ) : (
-              <div className="h-1.5 rounded-full"
+              <div className="h-1 rounded-full"
                 style={{ background: 'linear-gradient(90deg,#2563eb22 0%,#2563eb22 48%,#dc262622 48%,#dc262622 100%)' }} />
             )}
           </div>
         )}
-
-        {/* Stats */}
-        <div className="flex items-center gap-4">
-          <span className="text-xs" style={{ color: '#2a2a4a' }}>♡ {fmt(post.reactions)}</span>
-          <span className="text-xs" style={{ color: '#2a2a4a' }}>💬 {fmt(post.comments)}</span>
-          <span className="text-xs" style={{ color: '#2a2a4a' }}>🔖 {fmt(post.bookmarks)}</span>
-          {selected && (
-            <span className="ml-auto text-xs font-semibold"
-              style={{ color: isDebate ? accent : '#3b82f6' }}>
-              토론 중 →
-            </span>
-          )}
-        </div>
+        <span className="text-xs" style={{ color: '#2a2a4a' }}>♡ {fmt(post.reactions)}</span>
+        <span className="text-xs" style={{ color: '#2a2a4a' }}>💬 {fmt(post.comments)}</span>
+        <span className="text-xs" style={{ color: '#2a2a4a' }}>🔖 {fmt(post.bookmarks)}</span>
+        {selected && (
+          <span className="ml-auto text-xs font-semibold"
+            style={{ color: isDebate ? accent : '#3b82f6' }}>
+            토론 중 →
+          </span>
+        )}
       </div>
+    </div>
+  );
+}
+
+/* ─── Preview card (선택된 카드 인접, 흐릿한 한 줄 요약) ─── */
+function PreviewCard({ post }) {
+  const isDebate = post.type === 'debate' || post.type === 'today_debate' || post.type === 'hot_debate';
+  const accent = post.type === 'today_debate' ? '#fbbf24' : '#e63946';
+  const statusCfg = STATUS_CFG[post.status] || STATUS_CFG.Rumour;
+  const clubCfg = CLUB_CFG[post.club] || { bg: '#141420', color: '#9ca3af' };
+
+  return (
+    <div className="rounded-xl px-4 py-2.5 flex items-center gap-2 min-w-0"
+      style={{
+        background: '#0a0a14',
+        border: '1.5px solid #141420',
+        opacity: 0.4,
+        filter: 'blur(1.5px)',
+        pointerEvents: 'none',
+        userSelect: 'none',
+      }}>
+      {isDebate && (
+        <span className="text-xs font-bold px-1.5 py-0.5 rounded-full shrink-0"
+          style={{ background: `${accent}18`, color: accent }}>
+          {post.badge}
+        </span>
+      )}
+      {post.status && (
+        <span className="flex items-center gap-1 text-xs font-bold px-1.5 py-0.5 rounded shrink-0"
+          style={{ background: statusCfg.bg, color: statusCfg.color }}>
+          <span className="w-1 h-1 rounded-full" style={{ background: statusCfg.dot }} />
+          {post.status.toUpperCase()}
+        </span>
+      )}
+      {post.club && (
+        <span className="text-xs font-bold px-1.5 py-0.5 rounded shrink-0"
+          style={{ background: clubCfg.bg, color: clubCfg.color }}>
+          {post.club}
+        </span>
+      )}
+      <span className="text-sm font-semibold text-white truncate flex-1">
+        {post.title.replace('\n', ' ')}
+      </span>
+      {post.tweet && (
+        <span className="text-xs shrink-0" style={{ color: '#3a3a5a' }}>{post.tweet.timeAgo}</span>
+      )}
     </div>
   );
 }
@@ -393,15 +458,23 @@ function FeedColumn({ posts, selectedPost, onSelect, votes }) {
               <div className="text-4xl mb-3">🔍</div>
               <div className="text-sm">필터 조건에 맞는 이슈가 없습니다</div>
             </div>
-          ) : posts.map(post => (
-            <DesktopFeedCard
-              key={post.id}
-              post={post}
-              selected={selectedPost?.id === post.id}
-              onSelect={() => onSelect(post)}
-              vote={votes[post.id]}
-            />
-          ))}
+          ) : (() => {
+            const selectedIdx = posts.findIndex(p => p.id === selectedPost?.id);
+            return posts.map((post, idx) => {
+              const isSelected = idx === selectedIdx;
+              const isAdjacent = selectedIdx !== -1 && Math.abs(idx - selectedIdx) === 1;
+              if (isAdjacent) return <PreviewCard key={post.id} post={post} />;
+              return (
+                <DesktopFeedCard
+                  key={post.id}
+                  post={post}
+                  selected={isSelected}
+                  onSelect={() => onSelect(post)}
+                  vote={votes[post.id]}
+                />
+              );
+            });
+          })()}
         </div>
       </div>
     </div>
