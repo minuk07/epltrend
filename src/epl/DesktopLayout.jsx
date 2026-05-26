@@ -576,13 +576,33 @@ function DiscussionPanel({ post, vote, onVote }) {
                 </div>
                 {post.aiSummary && (
                   <div className="rounded-2xl p-4" style={{ background: '#0c0c18', border: '1px solid #2a2a4a' }}>
-                    <div className="flex items-center gap-2 mb-2.5">
+                    <div className="flex items-center gap-2 mb-3">
                       <span className="text-xs font-bold px-2 py-0.5 rounded-full"
                         style={{ color: '#818cf8', background: '#1e1b4b' }}>
                         ✦ AI 여론 분석
                       </span>
+                      <span className="text-xs" style={{ color: '#4a4a6a' }}>팬 의견 핵심 논점</span>
                     </div>
-                    <p className="text-sm leading-relaxed" style={{ color: '#9ca3af' }}>{post.aiSummary}</p>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="rounded-xl p-3" style={{ background: '#0d1a2a', border: '1px solid #1e3a5f' }}>
+                        <div className="flex items-center gap-1.5 mb-2">
+                          <span className="w-1.5 h-1.5 rounded-full" style={{ background: '#3b82f6' }} />
+                          <span className="text-xs font-semibold" style={{ color: '#3b82f6' }}>{post.voteForLabel} 측</span>
+                        </div>
+                        {(post.aiSummary.for || []).map((t, i) => (
+                          <p key={i} className="text-xs leading-relaxed mb-1" style={{ color: '#8ba8c8' }}>· {t}</p>
+                        ))}
+                      </div>
+                      <div className="rounded-xl p-3" style={{ background: '#1a0a0a', border: '1px solid #3b1010' }}>
+                        <div className="flex items-center gap-1.5 mb-2">
+                          <span className="w-1.5 h-1.5 rounded-full" style={{ background: '#e63946' }} />
+                          <span className="text-xs font-semibold" style={{ color: '#e63946' }}>{post.voteAgainstLabel} 측</span>
+                        </div>
+                        {(post.aiSummary.against || []).map((t, i) => (
+                          <p key={i} className="text-xs leading-relaxed mb-1" style={{ color: '#c48a8a' }}>· {t}</p>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 )}
               </>
@@ -682,24 +702,27 @@ function DiscussionPanel({ post, vote, onVote }) {
         {/* Comments */}
         <div className="pt-2 pb-20">
           {tab === 'args' && post.argumentPoints ? (
-            <div className="px-4 space-y-3 pt-2">
-              {['for', 'against'].map(side => {
-                const color = side === 'for' ? '#3b82f6' : '#e63946';
-                const bg = side === 'for' ? '#0d1a2a' : '#1a0a0a';
-                const label = side === 'for'
-                  ? `👍 ${post.voteForLabel}`
-                  : `${post.voteAgainstLabel} 👎`;
-                const points = post.argumentPoints[side] || [];
+            <div className="pt-2 pb-6 space-y-2">
+              {(post.argumentPoints || []).map(arg => {
+                const isFor = arg.stance === 'for';
+                const isNeutral = arg.stance === 'neutral';
+                const dotColor = isNeutral ? '#9ca3af' : isFor ? '#3b82f6' : '#e63946';
                 return (
-                  <div key={side} className="rounded-2xl p-3"
-                    style={{ background: bg, border: `1px solid ${color}25` }}>
-                    <div className="text-xs font-bold mb-2" style={{ color }}>{label}</div>
-                    {points.map((p, i) => (
-                      <div key={i} className="flex items-start gap-2 mb-1.5">
-                        <span className="w-1 h-1 rounded-full shrink-0 mt-1.5" style={{ background: color }} />
-                        <span className="text-xs leading-relaxed" style={{ color: '#c8ccdf' }}>{p}</span>
-                      </div>
-                    ))}
+                  <div key={arg.id} className="mx-4 rounded-2xl overflow-hidden"
+                    style={{ background: '#111118', border: '1px solid #1a1a2a' }}>
+                    <div className="flex items-center gap-3 px-4 py-3.5">
+                      <span className="w-2 h-2 rounded-full shrink-0" style={{ background: dotColor }} />
+                      <span className="flex-1 text-sm font-medium leading-snug" style={{ color: '#d0d4f0' }}>
+                        {arg.text}
+                      </span>
+                      <span className="text-xs px-2 py-0.5 rounded-full shrink-0"
+                        style={{
+                          color: dotColor,
+                          background: isNeutral ? '#1a1a2a' : isFor ? '#1e3a5f' : '#3b0a0a',
+                        }}>
+                        💬 {arg.comments}
+                      </span>
+                    </div>
                   </div>
                 );
               })}
