@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { POSTS, TEAMS } from './data';
 
 function fmt(n) {
@@ -448,9 +448,18 @@ function DiscussionPanel({ post, vote, onVote }) {
   const isToday = post?.type === 'today_debate';
   const accent = isToday ? '#fbbf24' : '#e63946';
   const statusColor = post ? (STATUS_CFG[post.status]?.color || '#9ca3af') : '#9ca3af';
+  const scrollRef = useRef(null);
+  const tabsRef = useRef(null);
 
   // Reset tab when post changes
   useEffect(() => { setTab('best'); }, [post?.id]);
+
+  // 투표 직후 탭/댓글 영역으로 자동 스크롤
+  useEffect(() => {
+    if (vote && tabsRef.current && scrollRef.current) {
+      tabsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [vote]);
 
   if (!post) {
     return (
@@ -488,7 +497,7 @@ function DiscussionPanel({ post, vote, onVote }) {
       </div>
 
       {/* Scrollable content */}
-      <div className="flex-1 overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
+      <div ref={scrollRef} className="flex-1 overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
 
         {isDebate ? (
           <div className="px-4 pt-4 pb-4 space-y-4">
@@ -646,7 +655,7 @@ function DiscussionPanel({ post, vote, onVote }) {
         )}
 
         {/* Tabs */}
-        <div className="flex gap-5 px-4 shrink-0" style={{ borderBottom: '1px solid #141420', borderTop: '1px solid #141420' }}>
+        <div ref={tabsRef} className="flex gap-5 px-4 shrink-0" style={{ borderBottom: '1px solid #141420', borderTop: '1px solid #141420' }}>
           {tabs.map(t => (
             <button key={t} onClick={() => setTab(t)}
               className="text-sm font-semibold pb-2.5 pt-2"
