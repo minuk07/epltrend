@@ -5,17 +5,18 @@
 - Vercel 프로젝트: Vite 프론트엔드와 `/api/*` 서버리스 함수 배포
 - Supabase Free 프로젝트: Postgres 테이블 저장소
 - X Developer 앱: user timeline 조회용 bearer token
-- OpenAI API key: 구조화 AI 분류와 한국어 브리핑 생성
+- Upstage Solar API key: AI 분류와 한국어 브리핑 생성
 - Slack 앱: 발행 채널과 검수 채널 Incoming Webhook 2개
 - 외부 스케줄러: cron-job.org 또는 GitHub Actions로 `/api/collect`를 15분마다 호출
 
 ## 환경변수
 
-- `SUPABASE_URL`: Supabase 프로젝트 URL
+- `SUPABASE_URL`: Supabase 프로젝트 URL. `https://프로젝트ref.supabase.co` 형태를 권장하며, `/rest/v1`이 붙은 API URL도 코드에서 처리한다.
 - `SUPABASE_SERVICE_ROLE_KEY`: Supabase service role key. 서버에서만 사용한다.
 - `X_BEARER_TOKEN`: X API bearer token
-- `OPENAI_API_KEY`: OpenAI API key
-- `OPENAI_MODEL`: 선택값. 기본값은 `gpt-5-mini`
+- `UPSTAGE_API_KEY`: Upstage API key
+- `UPSTAGE_MODEL`: 선택값. 기본값은 `solar-pro3`
+- `UPSTAGE_BASE_URL`: 선택값. 기본값은 `https://api.upstage.ai/v1`
 - `SLACK_PUBLISH_WEBHOOK_URL`: 발행 채널 Incoming Webhook
 - `SLACK_REVIEW_WEBHOOK_URL`: 검수 채널 Incoming Webhook
 - `CRON_SECRET`: `/api/collect` 호출용 shared secret
@@ -113,7 +114,7 @@ Slack 알림 실패는 MVP에서 재시도하지 않는다. 대신 `audit_events
 - `/api/feed`는 `published` item만 반환한다.
 - `/api/admin/items`는 `Authorization: Bearer ADMIN_TOKEN`으로 호출했을 때 대시보드 count와 검수 item을 반환한다.
 - `/api/collect`는 X 전역 `raw_post_id` 기준으로 idempotent해야 하며, 같은 X 글을 중복 저장하면 안 된다.
-- 실제 X 글 하나가 수집, OpenAI 분류, 한국어 브리핑 생성, Supabase 저장, 검수/발행 라우팅, 관리자/피드 표시까지 이어져야 한다.
+- 실제 X 글 하나가 수집, Upstage Solar 분류, 한국어 브리핑 생성, Supabase 저장, 검수/발행 라우팅, 관리자/피드 표시까지 이어져야 한다.
 - 첫 실제 수집 후 `content_items.ai_result.briefing`의 `title`, `summary_short`, `summary_detail`, `status`, `tags`를 확인한다.
 - 첫 실제 수집 후 `content_items.summary_short_ko`, `summary_detail_ko`, `briefing_status`, `review_reason`을 확인한다.
 - 분류, source fetch, Slack, 관리자 검수 동작이 애매하면 `audit_events`를 확인한다.

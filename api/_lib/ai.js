@@ -58,14 +58,25 @@ const CLASSIFICATION_SCHEMA = {
   },
 };
 
-function parseOutputText(payload) {
-  if (payload.output_text) return payload.output_text;
-  for (const item of payload.output || []) {
-    for (const content of item.content || []) {
-      if (content.type === 'output_text' && content.text) return content.text;
-    }
+function parseChatContent(payload) {
+  return payload.choices?.[0]?.message?.content || null;
+}
+
+function parseJsonObject(text) {
+  const raw = String(text || '').trim();
+  if (!raw) throw new Error('Solar response did not include message content');
+
+  try {
+    return JSON.parse(raw);
+  } catch {
+    const fenced = raw.match(/```(?:json)?\s*([\s\S]*?)```/i);
+    if (fenced?.[1]) return JSON.parse(fenced[1].trim());
+
+    const start = raw.indexOf('{');
+    const end = raw.lastIndexOf('}');
+    if (start >= 0 && end > start) return JSON.parse(raw.slice(start, end + 1));
+    throw new Error('Solar response was not valid JSON');
   }
-  return null;
 }
 
 function uniqueTargetTeams(values) {
@@ -165,9 +176,9 @@ function fallbackClassify(post, aliases) {
       competitions: [],
       journalists: post.author_handle ? [post.author_handle] : [],
     },
-    evidence: relevant ? ['OpenAI 키가 없어 alias 기반 규칙으로만 분류했습니다.'] : ['대상 6개 팀 alias와 일치하지 않았습니다.'],
+    evidence: relevant ? ['Upstage Solar 키가 없어 alias 기반 규칙으로만 분류했습니다.'] : ['대상 6개 팀 alias와 일치하지 않았습니다.'],
     review_reason: relevant
-      ? (isMediaHeavy(post) ? '사진/영상 중심이거나 텍스트가 짧아 검수가 필요합니다.' : 'OpenAI 키가 없어 자동 발행하지 않고 검수로 보냅니다.')
+      ? (isMediaHeavy(post) ? '사진/영상 중심이거나 텍스트가 짧아 검수가 필요합니다.' : 'Upstage Solar 키가 없어 자동 발행하지 않고 검수로 보냅니다.')
       : null,
     briefing: {
       title: relevant ? '검수 필요 EPL 업데이트' : '비대상 EPL 업데이트',
@@ -176,24 +187,28 @@ function fallbackClassify(post, aliases) {
       tags: teams,
       status,
     },
-  }, post);
+  }, post, aliases);
 }
 
-function enforcePolicy(result, post) {
-  const teams = uniqueTargetTeams([...(result.teams || []), ...((result.briefing && result.briefing.tags) || [])]);
+function enforcePolicy(result, post, aliases = []) {
+  const localEvidenceTeams = uniqueTargetTeams(matchTeams(post.text, aliases));
+  const modelTeams = uniqueTargetTeams([...(result.teams || []), ...((result.briefing && result.briefing.tags) || [])]);
+  const teams = localEvidenceTeams.length > 0
+    ? localEvidenceTeams
+    : modelTeams.filter(code => localEvidenceTeams.includes(code));
   const confidence = normalizeConfidence(result.confidence);
   const briefing = normalizeBriefing(result, teams, post);
   const evidence = Array.isArray(result.evidence) ? result.evidence.filter(Boolean).map(String) : [];
   const hasEvidence = evidence.length > 0;
   const mediaHeavy = isMediaHeavy(post);
   const reason = reviewReason(result.review_reason);
-  const targetRelevant = Boolean(result.is_target_relevant) && teams.length > 0;
+  const targetRelevant = Boolean(result.is_target_relevant) && localEvidenceTeams.length > 0;
   let decision = normalizeDecision(result.decision);
 
   const cleanResult = {
     ...result,
     is_target_relevant: targetRelevant,
-    teams: targetRelevant ? teams : [],
+    teams: targetRelevant ? localEvidenceTeams : [],
     decision,
     confidence,
     entities: {
@@ -206,7 +221,7 @@ function enforcePolicy(result, post) {
     review_reason: reason,
     briefing: {
       ...briefing,
-      tags: targetRelevant ? teams : [],
+      tags: targetRelevant ? localEvidenceTeams : [],
     },
   };
 
@@ -258,73 +273,84 @@ function enforcePolicy(result, post) {
   return cleanResult;
 }
 
-async function classifyPost(post, aliases) {
-  if (!process.env.OPENAI_API_KEY) return fallbackClassify(post, aliases);
+function solarBaseUrl() {
+  return String(process.env.UPSTAGE_BASE_URL || 'https://api.upstage.ai/v1').replace(/\/$/, '');
+}
 
-  const response = await fetch('https://api.openai.com/v1/responses', {
+function systemPrompt() {
+  return [
+    'You classify football X posts for a Korean EPL fan product.',
+    'Return JSON only. Do not return markdown, code fences, commentary, or extra text.',
+    'The JSON object must follow this exact top-level shape: is_target_relevant, teams, decision, confidence, entities, evidence, review_reason, briefing.',
+    'Only these target teams are in scope: MUN, MCI, LIV, ARS, TOT, CHE.',
+    'Discard posts unrelated to those six teams.',
+    'If a team is not named but a player/manager alias clearly links to one target team, tag that team. If the link is uncertain, choose review.',
+    'All user-facing briefing fields must be written in Korean.',
+    'Use only facts stated in the original X post. Do not add background context, fan sentiment, source credibility commentary, debate framing, opinion, or emotional wording.',
+    'Do not use clickbait, exclamation marks, emojis, or exaggerated Korean words such as 충격, 초대형, 전격.',
+    'Use speculative Korean reporting endings for unconfirmed information.',
+    'Allowed decision values: publish, review, discard.',
+    'Allowed briefing.status values: OFFICIAL, CONFIRMED, UPDATE, RUMOUR, DENIED.',
+    'Set briefing.status to OFFICIAL for club/player official announcements, CONFIRMED for definitive completed reports, UPDATE for progress, RUMOUR for interest/talks/possibility, and DENIED for denial/collapse/rejection.',
+    'Only choose decision=publish when the post is target-relevant, text-supported, status is OFFICIAL or CONFIRMED, confidence is at least 0.85, evidence exists, and review_reason is null.',
+    'Rumours, speculative wording, ambiguous posts, media-heavy posts, short captions, photos, and videos must go to review.',
+  ].join('\n');
+}
+
+function userPrompt(post, aliases) {
+  return JSON.stringify({
+    required_json_contract: CLASSIFICATION_SCHEMA,
+    post,
+    target_team_aliases: aliases,
+  });
+}
+
+async function requestSolar(body, allowRetry = true) {
+  const response = await fetch(`${solarBaseUrl()}/chat/completions`, {
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+      Authorization: `Bearer ${process.env.UPSTAGE_API_KEY}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
-      model: process.env.OPENAI_MODEL || 'gpt-5-mini',
-      input: [
-        {
-          role: 'system',
-          content: [{
-            type: 'input_text',
-            text: [
-              'You classify football X posts for a Korean EPL fan product.',
-              'Only these target teams are in scope: MUN, MCI, LIV, ARS, TOT, CHE.',
-              'Discard posts unrelated to those six teams.',
-              'If a team is not named but a player/manager alias clearly links to one target team, tag that team. If the link is uncertain, choose review.',
-              'All user-facing briefing fields must be written in Korean.',
-              'Use only facts stated in the original X post. Do not add background context, fan sentiment, source credibility commentary, debate framing, opinion, or emotional wording.',
-              'Do not use clickbait, exclamation marks, emojis, or exaggerated Korean words such as 충격, 초대형, 전격.',
-              'Use speculative Korean reporting endings for unconfirmed information.',
-              'Set briefing.status to OFFICIAL for club/player official announcements, CONFIRMED for definitive completed reports, UPDATE for progress, RUMOUR for interest/talks/possibility, and DENIED for denial/collapse/rejection.',
-              'Only choose decision=publish when the post is target-relevant, text-supported, status is OFFICIAL or CONFIRMED, confidence is at least 0.85, evidence exists, and review_reason is null.',
-              'Rumours, speculative wording, ambiguous posts, media-heavy posts, short captions, photos, and videos must go to review.',
-            ].join('\n'),
-          }],
-        },
-        {
-          role: 'user',
-          content: [{
-            type: 'input_text',
-            text: JSON.stringify({
-              post,
-              target_team_aliases: aliases,
-            }),
-          }],
-        },
-      ],
-      text: {
-        format: {
-          type: 'json_schema',
-          name: 'epl_x_classification',
-          strict: true,
-          schema: CLASSIFICATION_SCHEMA,
-        },
-      },
-    }),
+    body: JSON.stringify(body),
   });
 
   const payload = await response.json();
-  if (!response.ok) {
-    throw Object.assign(new Error(payload.error?.message || 'OpenAI classification failed'), {
-      statusCode: response.status >= 500 ? 502 : response.status,
-      payload,
-    });
+  if (response.ok) return payload;
+
+  const message = payload.error?.message || '';
+  if (allowRetry && response.status === 400 && /response_format|json_object/i.test(message)) {
+    const { response_format: _ignored, ...retryBody } = body;
+    return requestSolar(retryBody, false);
   }
 
-  const outputText = parseOutputText(payload);
-  if (!outputText) {
-    throw Object.assign(new Error('OpenAI response did not include output text'), { statusCode: 502, payload });
-  }
+  throw Object.assign(new Error(message || 'Upstage Solar classification failed'), {
+    statusCode: response.status >= 500 ? 502 : response.status,
+    payload,
+  });
+}
 
-  return enforcePolicy(JSON.parse(outputText), post);
+async function classifyPost(post, aliases) {
+  if (!process.env.UPSTAGE_API_KEY) return fallbackClassify(post, aliases);
+
+  const payload = await requestSolar({
+    model: process.env.UPSTAGE_MODEL || 'solar-pro3',
+    messages: [
+      {
+        role: 'system',
+        content: systemPrompt(),
+      },
+      {
+        role: 'user',
+        content: userPrompt(post, aliases),
+      },
+    ],
+    temperature: 0.1,
+    stream: false,
+    response_format: { type: 'json_object' },
+  });
+
+  return enforcePolicy(parseJsonObject(parseChatContent(payload)), post, aliases);
 }
 
 module.exports = {

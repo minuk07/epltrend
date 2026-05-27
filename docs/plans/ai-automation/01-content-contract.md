@@ -82,8 +82,8 @@ AI는 아래 형태의 구조화 JSON 하나만 반환해야 한다.
 | ID | 작업 | 완료 조건 |
 |---|---|---|
 | P1-T1 | `content.md` 규칙을 `docs/ai-automation-guidelines.md`에 병합 | 가이드에 한국어 전용, 원 트윗 사실만, 추가 금지 표현, 배경 추가 금지 규칙이 명시됨 |
-| P1-T2 | `api/_lib/ai.js`의 OpenAI JSON 스키마 수정 | 스키마에 nested `briefing` 객체가 포함됨 |
-| P1-T3 | fallback classifier 출력 형태 수정 | OpenAI 키가 없어도 동일한 계약 형태를 반환함 |
+| P1-T2 | `api/_lib/ai.js`의 AI JSON 계약 수정 | 스키마에 nested `briefing` 객체가 포함됨 |
+| P1-T3 | fallback classifier 출력 형태 수정 | Upstage Solar 키가 없어도 동일한 계약 형태를 반환함 |
 | P1-T4 | 자동 발행 정책 수정 | `news_type`만이 아니라 `briefing.status`와 보수 기준을 사용함 |
 | P1-T5 | feed/admin 매핑 수정 | UI가 title, short summary, detail summary, briefing status를 사용함 |
 | P1-T6 | 팀 추론/분류 평가셋 추가 | 최소 8개 케이스가 직접 팀 언급, 선수만 언급, 감독만 언급, 추상 표현, 비대상 팀, 오피셜, 루머, 미디어 중심 글의 예상 team, decision, status를 명시함 |

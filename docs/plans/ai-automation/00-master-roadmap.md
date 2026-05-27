@@ -33,7 +33,7 @@ flowchart TD
   A["기자 X 계정"] --> B["/api/collect"]
   B --> C["X API user timeline"]
   C --> D["raw_post_id 중복 제거"]
-  D --> E["OpenAI 분류 + 브리핑 생성"]
+  D --> E["Upstage Solar 분류 + 브리핑 생성"]
   E --> F{"AI 결정"}
   F -->|"publish"| G["content_items.status = published"]
   F -->|"review"| H["content_items.status = review"]

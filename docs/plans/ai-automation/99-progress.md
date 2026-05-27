@@ -18,9 +18,9 @@
 ## 현재 커서
 
 - 현재 단계: `P3 수집 파이프라인`
-- 현재 작업: `P3-T1`
+- 현재 작업: `P3-T4`
 - 상세 문서: `docs/plans/ai-automation/03-ingestion-pipeline.md`
-- 목표: `배포 환경에서 설정된 source의 X timeline을 조회할 수 있는지 검증한다.`
+- 목표: `X/Upstage Solar/Supabase 실패가 audit event로 남는지 검증한다.`
 
 ## 상태 표기
 
@@ -73,8 +73,8 @@
 | 상태 | 작업 | 주요 파일 | 완료 조건 |
 |---|---|---|---|
 | [x] | P1-T1 `content.md` 규칙을 가이드에 병합 | `content.md`, `docs/ai-automation-guidelines.md` | 가이드에 한국어 전용, 원 트윗 사실만, 추가 금지 표현, 배경 추가 금지 규칙이 명시됨 |
-| [x] | P1-T2 OpenAI JSON 스키마 수정 | `api/_lib/ai.js` | 구조화 출력에 `briefing.title`, `summary_short`, `summary_detail`, `tags`, `status`가 포함됨 |
-| [x] | P1-T3 fallback classifier 출력 형태 수정 | `api/_lib/ai.js` | OpenAI 키가 없어도 OpenAI 출력과 같은 계약을 반환함 |
+| [x] | P1-T2 AI JSON 계약 수정 | `api/_lib/ai.js` | 구조화 출력에 `briefing.title`, `summary_short`, `summary_detail`, `tags`, `status`가 포함됨 |
+| [x] | P1-T3 fallback classifier 출력 형태 수정 | `api/_lib/ai.js` | Upstage Solar 키가 없어도 같은 계약을 반환함 |
 | [x] | P1-T4 자동 발행 정책 수정 | `api/_lib/ai.js` | publish 기준이 `briefing.status`와 보수 정책을 사용함 |
 | [x] | P1-T5 feed/admin 매핑 수정 | `api/_lib/feed.js`, `src/epl/AdminDashboard.jsx` | feed/admin이 제목, 짧은 요약, 상세 요약, briefing status를 사용함 |
 | [x] | P1-T6 팀 추론/분류 평가셋 추가 | `docs/ai-automation-guidelines.md`, `01-content-contract.md` | 최소 8개 케이스가 직접 팀 언급, 선수만 언급, 감독만 언급, 추상 표현, 비대상 팀, 오피셜, 루머, 미디어 중심 글의 예상 팀/decision/status를 명시함 |
@@ -110,13 +110,13 @@ P2 종료 확인:
 
 | 상태 | 작업 | 주요 파일 | 완료 조건 |
 |---|---|---|---|
-| [ ] | P3-T1 X timeline fetch 검증 | `api/_lib/x.js`, `api/collect.js` | 배포 환경에서 설정된 source를 조회할 수 있음 |
-| [ ] | P3-T2 idempotency 검증 | `api/collect.js`, `supabase/schema.sql` | collector를 두 번 실행해도 중복 row가 생기지 않음 |
-| [ ] | P3-T3 source cursor 검증 | `api/collect.js`, `api/_lib/x.js` | 성공한 source의 `last_seen_post_id`가 갱신됨 |
-| [ ] | P3-T4 오류 처리 검증 | `api/collect.js`, `api/_lib/audit.js`, `api/_lib/slack.js` | X/OpenAI/Supabase 실패가 audit event로 남음 |
+| [x] | P3-T1 X timeline fetch 검증 | `api/_lib/x.js`, `api/collect.js` | 배포 환경에서 설정된 source를 조회할 수 있음 |
+| [x] | P3-T2 idempotency 검증 | `api/collect.js`, `supabase/schema.sql` | collector를 두 번 실행해도 중복 row가 생기지 않음 |
+| [x] | P3-T3 source cursor 검증 | `api/collect.js`, `api/_lib/x.js` | 성공한 source의 `last_seen_post_id`가 갱신됨 |
+| [ ] | P3-T4 오류 처리 검증 | `api/collect.js`, `api/_lib/audit.js`, `api/_lib/slack.js` | X/Upstage Solar/Supabase 실패가 audit event로 남음 |
 | [ ] | P3-T5 보수 라우팅 검증 | `api/_lib/ai.js`, `api/collect.js` | 루머/미디어 중심 글은 publish가 아니라 review로 감 |
 | [ ] | P3-T6 collector smoke test 문서화 | `docs/deployment-mvp.md`, `03-ingestion-pipeline.md` | 수동 curl과 예상 응답이 문서화됨 |
-| [ ] | P3-T7 실제 X 글 AI 요약 검증 | `api/collect.js`, `api/_lib/ai.js`, Supabase `content_items` | 실제 source 글 1개가 OpenAI를 거쳐 briefing 제목/짧은 요약/상세 요약/status/tags로 저장됨 |
+| [ ] | P3-T7 실제 X 글 AI 요약 검증 | `api/collect.js`, `api/_lib/ai.js`, Supabase `content_items` | 실제 source 글 1개가 Upstage Solar를 거쳐 briefing 제목/짧은 요약/상세 요약/status/tags로 저장됨 |
 
 P3 종료 확인:
 
@@ -196,7 +196,7 @@ P6 종료 확인:
   - `/api/feed`
   - `/api/admin/items`
   - `/api/admin/review`
-- Supabase REST, X API, OpenAI, Slack, audit event, auth token helper.
+- Supabase REST, X API, Upstage Solar, Slack, audit event, auth token helper.
 - 초기 Supabase schema.
 - 초기 `/admin` 대시보드와 검수 UI.
 - 기존 Reax 피드가 `/api/feed`를 먼저 시도하고 실패 시 mock fallback 사용.
@@ -215,13 +215,13 @@ P6 종료 확인:
 
 ## 남은 빈틈
 
-- live Supabase, X API, OpenAI, Slack, Cron 검증은 아직 하지 않음.
+- live Supabase, X API, Upstage Solar, Slack, Cron 검증은 아직 하지 않음.
 
 ## 결정 기록
 
 - 스크래핑이 아니라 X API를 사용한다.
 - MVP 저장소는 Supabase Free를 사용한다.
-- AI 출력은 OpenAI Structured Outputs를 사용한다.
+- AI 출력은 Upstage Solar Chat Completions와 서버 측 JSON 정규화/보수 정책을 사용한다.
 - Slack Incoming Webhook 2개를 사용한다.
 - 15분 수집은 외부 Cron으로 실행한다.
 - 자동 발행은 보수적으로 처리한다.
@@ -231,4 +231,4 @@ P6 종료 확인:
 
 - 실제 환경변수가 이 workspace에 설정되어 있지 않다.
 - Supabase schema를 live 프로젝트에 적용하지 않았다.
-- X API, OpenAI, Slack end-to-end 호출을 live credential로 검증하지 않았다.
+- X API, Upstage Solar, Slack end-to-end 호출을 live credential로 검증하지 않았다.

@@ -8,8 +8,11 @@ function config() {
   if (!url || !key) {
     throw Object.assign(new Error('SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are required'), { statusCode: 500 });
   }
+  const baseUrl = url
+    .replace(/\/$/, '')
+    .replace(/\/rest\/v1$/, '');
   return {
-    baseUrl: url.replace(/\/$/, ''),
+    baseUrl,
     key,
   };
 }

@@ -9,8 +9,9 @@
 - `SUPABASE_URL`
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `X_BEARER_TOKEN`
-- `OPENAI_API_KEY`
-- `OPENAI_MODEL`
+- `UPSTAGE_API_KEY`
+- `UPSTAGE_MODEL`
+- `UPSTAGE_BASE_URL`
 - `SLACK_PUBLISH_WEBHOOK_URL`
 - `SLACK_REVIEW_WEBHOOK_URL`
 - `CRON_SECRET`
@@ -26,7 +27,7 @@
 5. `/admin`을 연다.
 6. 수동 수집을 실행한다.
 7. Supabase row 생성을 확인한다.
-8. 실제 X 글이 OpenAI 요약을 거쳐 `content_items.ai_result.briefing`에 저장됐는지 확인한다.
+8. 실제 X 글이 Upstage Solar 요약을 거쳐 `content_items.ai_result.briefing`에 저장됐는지 확인한다.
 9. 관리자 검수 큐 또는 피드에서 같은 글이 보이는지 확인한다.
 10. Slack review/publish 알림을 확인한다.
 11. 15분 주기의 외부 Cron을 설정한다.

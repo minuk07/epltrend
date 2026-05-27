@@ -4,7 +4,7 @@
 
 직접 선정한 기자 계정에서 X 글을 수집하고, 중복 제거, AI 분류, 저장, 발행/검수/폐기 라우팅을 수행한다.
 
-P3 작업을 시작하기 전에 `docs/plans/ai-automation/07-p3-preflight-guide.md`를 따라 실제 Supabase, X API, OpenAI, Slack, Vercel 환경변수를 준비한다.
+P3 작업을 시작하기 전에 `docs/plans/ai-automation/07-p3-preflight-guide.md`를 따라 실제 Supabase, X API, Upstage Solar, Slack, Vercel 환경변수를 준비한다.
 
 ## 흐름
 
@@ -14,7 +14,7 @@ P3 작업을 시작하기 전에 `docs/plans/ai-automation/07-p3-preflight-guide
 4. 각 source의 X user timeline을 조회한다.
 5. retweet과 reply는 제외한다.
 6. X 전역 post id인 `raw_post_id` 기준으로 중복을 제거한다.
-7. P1 콘텐츠 계약에 맞춰 OpenAI로 분류한다.
+7. P1 콘텐츠 계약에 맞춰 Upstage Solar로 분류한다.
 8. 결과를 `content_items`에 저장한다.
 9. `published` 또는 `review` 항목은 Slack 알림을 보낸다.
 10. `sources.last_seen_post_id`를 갱신한다.
@@ -27,10 +27,10 @@ P3 작업을 시작하기 전에 `docs/plans/ai-automation/07-p3-preflight-guide
 | P3-T1 | X timeline fetch 검증 | 배포 환경에서 설정된 source의 글을 1개 이상 조회할 수 있음 |
 | P3-T2 | idempotency 검증 | collector를 두 번 실행해도 중복 row가 생기지 않음 |
 | P3-T3 | source cursor 검증 | source 처리가 성공한 뒤 `last_seen_post_id`가 갱신됨 |
-| P3-T4 | 오류 처리 검증 | X/OpenAI/Supabase 실패가 audit event로 남음 |
+| P3-T4 | 오류 처리 검증 | X/Upstage Solar/Supabase 실패가 audit event로 남음 |
 | P3-T5 | 보수 라우팅 검증 | 루머/미디어 중심 글은 publish가 아니라 review로 감 |
 | P3-T6 | collector smoke test 문서화 | 수동 curl과 예상 응답이 문서화됨 |
-| P3-T7 | 실제 X 글 AI 요약 검증 | 실제 source 글 1개가 OpenAI를 거쳐 `briefing.title`, `summary_short`, `summary_detail`, `status`, `tags`로 저장됨 |
+| P3-T7 | 실제 X 글 AI 요약 검증 | 실제 source 글 1개가 Upstage Solar를 거쳐 `briefing.title`, `summary_short`, `summary_detail`, `status`, `tags`로 저장됨 |
 
 ## 종료 조건
 

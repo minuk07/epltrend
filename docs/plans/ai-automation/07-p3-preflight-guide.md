@@ -1,6 +1,6 @@
 # P3 사전작업 상세 가이드
 
-이 문서는 P3 수집 파이프라인 검증 전에 사용자가 직접 해야 하는 외부 서비스 설정 절차다. 목표는 실제 X 글 1개를 수집해서 OpenAI 요약, Supabase 저장, Slack 알림, 관리자 화면 노출까지 확인할 수 있는 상태를 만드는 것이다.
+이 문서는 P3 수집 파이프라인 검증 전에 사용자가 직접 해야 하는 외부 서비스 설정 절차다. 목표는 실제 X 글 1개를 수집해서 Upstage Solar 요약, Supabase 저장, Slack 알림, 관리자 화면 노출까지 확인할 수 있는 상태를 만드는 것이다.
 
 ## 절대 규칙
 
@@ -17,7 +17,7 @@
 | Supabase Project URL | Supabase Project Settings | `SUPABASE_URL` |
 | Supabase service role key | Supabase Project Settings | `SUPABASE_SERVICE_ROLE_KEY` |
 | X API bearer token | X Developer Portal | `X_BEARER_TOKEN` |
-| OpenAI API key | OpenAI API key page | `OPENAI_API_KEY` |
+| Upstage API key | Upstage Console API Keys | `UPSTAGE_API_KEY` |
 | Slack 발행 webhook | Slack App Incoming Webhooks | `SLACK_PUBLISH_WEBHOOK_URL` |
 | Slack 검수 webhook | Slack App Incoming Webhooks | `SLACK_REVIEW_WEBHOOK_URL` |
 | collector 비밀키 | 직접 생성 | `CRON_SECRET` |
@@ -106,11 +106,13 @@ order by tier asc, handle asc;
 
 Supabase Project Settings에서 아래 값을 찾는다.
 
-- Project URL -> `SUPABASE_URL`
+- Project URL 또는 API URL -> `SUPABASE_URL`
 - service role key -> `SUPABASE_SERVICE_ROLE_KEY`
 
 주의:
 
+- `SUPABASE_URL`은 `https://프로젝트ref.supabase.co` 형태가 가장 좋다.
+- Supabase 화면에서 복사한 값이 `https://프로젝트ref.supabase.co/rest/v1`처럼 `/rest/v1`까지 포함되어 있어도 현재 코드는 처리할 수 있다.
 - `anon key`가 아니라 `service role key`를 써야 한다.
 - service role key는 서버에서만 사용한다.
 - 이 값을 프론트엔드 코드에 직접 넣지 않는다.
@@ -154,28 +156,29 @@ Invoke-RestMethod `
 
 `data` 배열이 오면 P3-T1의 핵심 외부 조건은 준비된 것이다. `403`, `429`, plan 관련 오류가 오면 X API 플랜/권한 문제다.
 
-## 6. OpenAI API key 준비
+## 6. Upstage Solar API key 준비
 
-1. OpenAI Platform에 로그인한다.
-2. API key page에서 새 secret key를 만든다.
-3. 값을 `OPENAI_API_KEY`로 저장한다.
-4. `OPENAI_MODEL`은 우선 `gpt-5-mini`로 둔다.
+1. Upstage Console에 로그인한다.
+2. API Keys 화면에서 새 key를 만들거나 기본 key를 복사한다.
+3. 값을 `UPSTAGE_API_KEY`로 저장한다.
+4. `UPSTAGE_MODEL`은 우선 `solar-pro3`로 둔다.
+5. `UPSTAGE_BASE_URL`은 기본값 `https://api.upstage.ai/v1`을 사용한다.
 
 간단 확인:
 
 ```powershell
-$env:OPENAI_API_KEY="여기에_OPENAI_API_KEY"
+$env:UPSTAGE_API_KEY="여기에_UPSTAGE_API_KEY"
 Invoke-RestMethod `
   -Method Post `
-  -Uri "https://api.openai.com/v1/responses" `
+  -Uri "https://api.upstage.ai/v1/chat/completions" `
   -Headers @{
-    Authorization = "Bearer $env:OPENAI_API_KEY"
+    Authorization = "Bearer $env:UPSTAGE_API_KEY"
     "Content-Type" = "application/json"
   } `
-  -Body '{"model":"gpt-5-mini","input":"ping"}'
+  -Body '{"model":"solar-pro3","messages":[{"role":"user","content":"ping"}],"stream":false}'
 ```
 
-모델 권한 오류가 나면 Vercel 환경변수의 `OPENAI_MODEL`을 계정에서 사용 가능한 모델로 바꾼다.
+모델 권한 오류가 나면 Vercel 환경변수의 `UPSTAGE_MODEL`을 계정에서 사용 가능한 모델로 바꾼다. 예비 후보는 `solar-pro2`, `solar-mini`다.
 
 ## 7. Slack webhook 2개 만들기
 
@@ -221,8 +224,9 @@ Vercel 프로젝트에서 Settings > Environment Variables로 간다.
 SUPABASE_URL=...
 SUPABASE_SERVICE_ROLE_KEY=...
 X_BEARER_TOKEN=...
-OPENAI_API_KEY=...
-OPENAI_MODEL=gpt-5-mini
+UPSTAGE_API_KEY=...
+UPSTAGE_MODEL=solar-pro3
+UPSTAGE_BASE_URL=https://api.upstage.ai/v1
 SLACK_PUBLISH_WEBHOOK_URL=...
 SLACK_REVIEW_WEBHOOK_URL=...
 CRON_SECRET=...
@@ -357,7 +361,7 @@ having count(*) > 1;
 | Supabase 500 | `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` | anon key를 넣지 않았는지 확인 |
 | X username lookup 실패 | `X_BEARER_TOKEN`, X plan | `GET /2/users/by/username/...` 단독 테스트 |
 | X timeline 403/429 | X API 권한/제한 | plan, rate limit, app 권한 확인 |
-| OpenAI 오류 | `OPENAI_API_KEY`, `OPENAI_MODEL` | key와 모델 접근 권한 확인 |
+| Upstage Solar 오류 | `UPSTAGE_API_KEY`, `UPSTAGE_MODEL`, `UPSTAGE_BASE_URL` | key와 모델 접근 권한 확인 |
 | Slack 메시지 없음 | webhook URL | PowerShell webhook 단독 테스트 |
 | 수집은 됐는데 전부 discarded | 대상 팀/alias | `team_aliases`에 선수/감독 alias가 있는지 확인 |
 | 팀이 잘못 붙음 | stale alias | 해당 alias를 `active=false`로 바꾸고 `notes`에 사유 기록 |
@@ -382,4 +386,4 @@ having count(*) > 1;
 - Supabase Database/SQL Editor: https://supabase.com/docs/guides/database/overview
 - Vercel environment variables: https://docs.vercel.com/docs/builds
 - Slack Incoming Webhooks: https://api.slack.com/messaging/webhooks
-- OpenAI API keys: https://help.openai.com/en/articles/4936850-where-do-i-find-my-openai-api-key
+- Upstage Console API keys: https://console.upstage.ai/api-keys?api=chat
