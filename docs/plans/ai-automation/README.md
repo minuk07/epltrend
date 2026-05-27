@@ -22,6 +22,7 @@
 | P1 | `01-content-contract.md` | AI 분류와 한국어 브리핑 출력 계약 확정 |
 | P2 | `02-data-model.md` | Supabase 스키마, seed, 마이그레이션 확정 |
 | P3 | `03-ingestion-pipeline.md` | X 수집, 중복 제거, AI 분류, 라우팅 |
+| P3 사전작업 | `07-p3-preflight-guide.md` | X/Supabase/OpenAI/Slack/Vercel 실제 연동 준비 |
 | P4 | `04-admin-review.md` | 관리자 검수 큐와 승인/반려 플로우 |
 | P5 | `05-feed-publishing.md` | 승인된 콘텐츠를 Reax 피드에 반영 |
 | P6 | `06-deployment-ops.md` | 배포, 스케줄링, 모니터링, MVP 검증 |

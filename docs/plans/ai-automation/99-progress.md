@@ -37,6 +37,7 @@
 - `REAX_기획서.md`
 - `docs/ai-automation-guidelines.md`
 - `docs/deployment-mvp.md`
+- `docs/plans/ai-automation/07-p3-preflight-guide.md`
 
 구현을 건드리는 작업이면 아래 파일 중 작업에 매핑된 파일을 읽는다.
 

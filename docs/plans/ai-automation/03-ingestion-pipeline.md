@@ -4,6 +4,8 @@
 
 직접 선정한 기자 계정에서 X 글을 수집하고, 중복 제거, AI 분류, 저장, 발행/검수/폐기 라우팅을 수행한다.
 
+P3 작업을 시작하기 전에 `docs/plans/ai-automation/07-p3-preflight-guide.md`를 따라 실제 Supabase, X API, OpenAI, Slack, Vercel 환경변수를 준비한다.
+
 ## 흐름
 
 1. 외부 Cron이 `POST /api/collect`를 호출한다.
