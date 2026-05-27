@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { POSTS, TEAMS } from './data';
+import usePublishedPosts from './usePublishedPosts';
 
 function fmt(n) {
   if (n >= 1000) return (n / 1000).toFixed(1).replace('.0', '') + 'K';
@@ -881,16 +882,16 @@ function VotePanel({ post, vote, onVote }) {
 export default function DesktopLayout({ selectedTeam }) {
   const width = useWindowWidth();
   const sidebarCollapsed = width < 1280;
+  const { posts } = usePublishedPosts(POSTS);
 
-  const defaultPost = POSTS.find(p => p.type === 'hot_debate') || POSTS[0];
-  const [selectedPost, setSelectedPost] = useState(defaultPost);
+  const [selectedPost, setSelectedPost] = useState(null);
   const [votes, setVotes] = useState({});
   const [clubFilter, setClubFilter] = useState([]);
 
   const filteredPosts = useMemo(() => {
-    if (clubFilter.length === 0) return POSTS;
-    return POSTS.filter(p => clubFilter.includes(p.club));
-  }, [clubFilter]);
+    if (clubFilter.length === 0) return posts;
+    return posts.filter(p => clubFilter.includes(p.club));
+  }, [clubFilter, posts]);
 
   // 필터 변경 시 선택된 포스트가 없으면 첫 번째로
   useEffect(() => {
@@ -910,7 +911,7 @@ export default function DesktopLayout({ selectedTeam }) {
         selectedTeam={selectedTeam}
         clubFilter={clubFilter}
         onClubFilterChange={setClubFilter}
-        posts={POSTS}
+        posts={posts}
         selectedPost={selectedPost}
         onSelectPost={setSelectedPost}
         collapsed={sidebarCollapsed}

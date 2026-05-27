@@ -3,6 +3,7 @@ import StatusBar, { HomeIndicator } from './components/StatusBar'
 import EPLFeed from './epl/EPLFeed'
 import Onboarding from './epl/Onboarding'
 import DesktopLayout from './epl/DesktopLayout'
+import AdminDashboard from './epl/AdminDashboard'
 
 function useWindowWidth() {
   const [w, setW] = useState(window.innerWidth);
@@ -21,6 +22,10 @@ export default function App() {
     catch { return null; }
   })
   const width = useWindowWidth();
+
+  if (window.location.pathname.startsWith('/admin')) {
+    return <AdminDashboard />
+  }
 
   // 768px 이상이면 데스크톱 레이아웃 (온보딩 스킵)
   if (width >= 768) {

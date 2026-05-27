@@ -1,6 +1,7 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { POSTS } from './data';
 import ReactionPanel from './ReactionPanel';
+import usePublishedPosts from './usePublishedPosts';
 
 function fmt(n) {
   if (n >= 1000) return (n / 1000).toFixed(1).replace('.0', '') + 'K';
@@ -752,6 +753,7 @@ const STORAGE_KEY = 'reax_read';
 
 /* ─── Main export ─── */
 export default function EPLFeed({ selectedTeam }) {
+  const { posts } = usePublishedPosts(POSTS);
   const [activeTab, setActiveTab] = useState('feed');
   const [panelPost, setPanelPost] = useState(null);
   const [votes, setVotes] = useState({});
@@ -761,11 +763,14 @@ export default function EPLFeed({ selectedTeam }) {
     () => new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'))
   );
 
-  // 마운트 시 한 번만 정렬 — 세션 중 readIds 변경해도 순서 유지
-  const [sortedPosts] = useState(() => {
-    const ids = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'));
-    return sortFeed(POSTS, selectedTeam?.shortName, ids);
-  });
+  const sortedPosts = useMemo(
+    () => sortFeed(posts, selectedTeam?.shortName, readIds),
+    [posts, selectedTeam?.shortName, readIds]
+  );
+
+  useEffect(() => {
+    if (currentIndex >= sortedPosts.length) setCurrentIndex(0);
+  }, [currentIndex, sortedPosts.length]);
 
   const markRead = useCallback((postId) => {
     if (!postId) return;
@@ -801,14 +806,14 @@ export default function EPLFeed({ selectedTeam }) {
           />
         )}
         {activeTab === 'hot' && (
-          <HotView posts={POSTS} onOpen={(post) => { markRead(post.id); setPanelPost(post); }} />
+          <HotView posts={posts} onOpen={(post) => { markRead(post.id); setPanelPost(post); }} />
         )}
         {activeTab === 'search' && <SearchView />}
         {activeTab === 'my' && (
           <MyView
             selectedTeam={selectedTeam}
             votes={votes}
-            posts={POSTS}
+            posts={posts}
             onOpen={(post) => { markRead(post.id); setPanelPost(post); }}
           />
         )}
