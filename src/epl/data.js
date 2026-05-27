@@ -22,7 +22,7 @@ export const POSTS = [
       tier: 1,
       timeAgo: '6시간 전',
     },
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Arsenal_Heeresgeschichtliches_Museum_Fassadendetail-DSC_7940w.jpg/960px-Arsenal_Heeresgeschichtliches_Museum_Fassadendetail-DSC_7940w.jpg',
+    imageUrl: 'https://t1.daumcdn.net/brunch/service/user/8HW9/image/kF8GyoTUMR-Oj13_ogAAScaue8Q.jpg',
     club: 'ARS',
     status: 'Official',
     hashtags: ['#아르테타', '#아스날', '#프리미어리그'],
