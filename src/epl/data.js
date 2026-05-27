@@ -8,6 +8,36 @@ export const TEAMS = [
 ];
 
 export const POSTS = [
+  // ── p27: 아르테타 올해의 감독상 수상 (general / ARS) ──────────────────
+  {
+    id: 'p27',
+    type: 'general',
+    title: '아르테타 프리미어리그\n올해의 감독상 수상',
+    summary: '미켈 아르테타 아스날 감독이 2024-25 시즌 프리미어리그 올해의 감독상을 수상했다.',
+    briefing: '미켈 아르테타 아스날 감독이 2024-25 시즌 프리미어리그 올해의 감독상(Manager of the Season Award)을 수상했다. 공식 발표에 따른 것이다.',
+    tweet: {
+      author: 'Fabrizio Romano',
+      initials: 'FR',
+      handle: '@FabrizioRomano',
+      tier: 1,
+      timeAgo: '6시간 전',
+    },
+    imageUrl: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=500&h=500&fit=crop',
+    club: 'ARS',
+    status: 'Official',
+    hashtags: ['#아르테타', '#아스날', '#프리미어리그'],
+    reactions: 12400,
+    comments: 3200,
+    bookmarks: 1100,
+    shares: 580,
+    comments_data: [
+      { id: 1, rank: '01', initials: 'AG', user: '@arsenal_gooner', club: 'ARS', timeAgo: '5시간', text: '아르테타의 우승이 공식 인증됐다. 진심으로 축하한다', likes: 3456, stance: null },
+      { id: 2, rank: '02', initials: 'SK', user: '@sky_sports', timeAgo: '5시간', text: '올해의 감독상을 받으며 아르테타의 리더십이 평가받았다', likes: 2890, stance: null },
+      { id: 3, rank: '03', initials: 'EK', user: '@epl_kr', timeAgo: '4시간', text: '21년 만의 우승을 이루어낸 감독이 당연한 상이다', likes: 2134, stance: null },
+      { id: 4, rank: '04', initials: 'MF', user: '@manu_fan', club: 'MUN', timeAgo: '4시간', text: '맨유는 언제 이런 감독을 만날까', likes: 1789, stance: null },
+    ],
+  },
+
   // ── p26: 라이스 "다 됐다" / 브루노 vs 라이스 논쟁 (hot_debate / ARS) ─
   {
     id: 'p26',
